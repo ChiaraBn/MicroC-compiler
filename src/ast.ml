@@ -1,10 +1,12 @@
 type binop = Add | Sub | Mult | Div  | Mod | Equal | Neq | Less | Leq |
-             Greater | Geq | And | Or | Comma
+             Greater | Geq | And | Or | Comma | Assign
 [@@deriving show]
 
-type uop = Neg | Not [@@deriving show]
+type uop = Neg | Not 
+[@@deriving show]
 
-type identifier = string [@@deriving show]
+type identifier = string 
+[@@deriving show]
 
 type position = Lexing.position * Lexing.position
 let dummy_pos = (Lexing.dummy_pos, Lexing.dummy_pos)

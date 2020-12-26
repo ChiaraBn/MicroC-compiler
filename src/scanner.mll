@@ -1,44 +1,68 @@
 {
     open Parser
+
+    exception Lexing_error of string
+
+    let create_hashtable size init =
+        let tbl = Hashtbl.create size in
+        List.iter (fun (key, data) -> Hashtbl.add tbl key data) init;
+        tbl
+
+    let keyword_table =
+        create_hashtable 8 [
+            ("if", IF);
+            ("else", ELSE);
+            ("return", RETURN);
+            ("while", WHILE);
+            ("for", FOR);
+            ("int", INT);
+            ("char", CHAR);
+            ("bool", BOOl);
+            ("void", VOID);
+            ("NULL", NULL);
+            
+            ("true", TRUE);
+            ("false", FALSE)
+        ]
 }
 
 let letter = ['a'-'z' 'A'-'Z']
+let lit_letter = '\'' letter+ '\''
 let digit = ['0' - '9']
 let identifier = _ | letter (letter | digit | '_')*
 
 rule token = parse
-    | digit+                { LINT }
-    | letter+               { LCHAR }
-    | identifier            { ID }
+    | digit+ as inum        { 
+                              let num = int_of_string inum in
+			                  LINT(num)
+                            }
+    | lit_letter as ichar   { 
+                              let c = ichar in
+                              LCHAR(c)
+                            }
     
-    | "if"                  { IF }
-    | "else"                { ELSE }
-    | "return"              { RETURN }
-    | "while"               { WHILE }
-    | "for"                 { FOR }
-    | "int"                 { INT }
-    | "char"                { CHAR }
-    | "void"                { VOID }
-    | "NULL"                { NULL }
-    | "bool"                { BOOL }
-
-    | "true"                { TRUE }
-    | "false"               { FALSE }
-    
+    | identifier as word    { 
+                              try
+                               Hashtbl.find keyword_table word
+                              with Not_found ->
+			                   ID(word)
+                            }
+        
     | '+'                   { PLUS }
     | '-'                   { MINUS }
     | '*'                   { TIMES }
     | '/'                   { DIV }
     | '%'                   { MODULE }
-    | "=="                  { EQ }
-    | '='                   { ASSIGN }
-    | "!="                  { NOTEQ }
-    | '!'                   { NOT }
+    
     | '<'                   { LESS }
     | '>'                   { GREATER }
     | "<="                  { LEQ }
     | ">="                  { GEQ }
-
+    | "=="                  { EQ }
+    | "!="                  { NOTEQ }
+    | '='                   { ASSIGN }
+    | '!'                   { NOT }
+    
     | '('                   { LPAREN }
     | ')'                   { RPAREN }
     | '['                   { LSQUAREPAREN }
