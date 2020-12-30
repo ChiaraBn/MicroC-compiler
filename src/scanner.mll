@@ -17,7 +17,7 @@
             ("for", FOR);
             ("int", INT);
             ("char", CHAR);
-            ("bool", BOOl);
+            ("bool", BOOL);
             ("void", VOID);
             ("NULL", NULL);
             
@@ -36,7 +36,7 @@ rule token = parse
                               let num = int_of_string inum in
 			                  LINT(num)
                             }
-    | lit_letter as ichar   { 
+    | lit_letter+ as ichar  { 
                               let c = ichar in
                               LCHAR(c)
                             }
@@ -77,8 +77,8 @@ rule token = parse
     | "/*"                  { print_endline "comments start"; comments 0 lexbuf }
     | "//"                  { print_endline "comments start"; comments_one_line lexbuf }
 
-    | [' ' '\t']            { next_token lexbuf }
-    | '\n'                  { Lexing.new_line lexbuf; next_token lexbuf }
+    | [' ' '\t']            { token lexbuf }
+    | '\n'                  { Lexing.new_line lexbuf; token lexbuf }
     | eof                   { EOF }
 
     | _ as c                { Util.raise_lexer_error lexbuf ("Illegal character " ^ Char.escaped c) }
@@ -101,7 +101,7 @@ and comments_one_line = parse
     | _                     { comments_one_line lexbuf }
     | '\n'                  {                                
                               Printf.printf "comments (%d) end\n";
-                              Lexing.new_line lexbuf; next_token lexbuf;
+                              Lexing.new_line lexbuf; token lexbuf;
                             }
 
 {

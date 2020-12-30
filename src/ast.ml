@@ -11,12 +11,13 @@ type identifier = string
 type position = Lexing.position * Lexing.position
 let dummy_pos = (Lexing.dummy_pos, Lexing.dummy_pos)
 
-type 'a annotated_node = {loc : position[@opaque]; node : 'a; id : int }[@@deriving show]
+type 'a annotated_node = {loc : position[@opaque]; node : 'a; id : int }
+[@@deriving show]
 
 type typ =
-  | TypI                             (* Type int                    *)
-  | TypB                             (* Type bool                   *)
-  | TypC                             (* Type char                   *)
+  | TypI of int                      (* Type int                    *)
+  | TypB of int                      (* Type bool                   *)
+  | TypC of char                     (* Type char                   *)
   | TypA of typ * int option         (* Array type                  *)
   | TypP of typ                      (* Pointer type                *)
   | TypV                             (* Type void                   *)
@@ -40,6 +41,11 @@ and access_node =
   | AccVar of identifier             (* Variable access        x    *)
   | AccDeref of expr                 (* Pointer dereferencing  *p   *)
   | AccIndex of access * expr        (* Array indexing         a[e] *)
+  | AccBinOp of binop * access_node * access_node
+  | AccUnOp of uop * access_node 
+  | AccChar of string
+  | AccBool of bool
+  | AccInt of int
 [@@deriving show]
 
 and stmt = stmt_node annotated_node
@@ -62,7 +68,8 @@ type fun_decl = {
   fname : string;
   formals : (typ*identifier) list;
   body : stmt;
-}[@@deriving show]
+}
+[@@deriving show]
 
 type topdecl = topdecl_node annotated_node
 and topdecl_node =
@@ -70,4 +77,6 @@ and topdecl_node =
   | Vardec of typ * identifier
 [@@deriving show]
 
-type program = Prog of topdecl list [@@deriving show]
+type program = 
+  Prog of topdecl list 
+[@@deriving show]
