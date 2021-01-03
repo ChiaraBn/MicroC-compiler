@@ -1,5 +1,5 @@
 type binop = Add | Sub | Mult | Div  | Mod | Equal | Neq | Less | Leq |
-             Greater | Geq | And | Or | Comma | Assign
+             Greater | Geq | And | Or | Comma | Assign | And_bit | Or_bit
 [@@deriving show]
 
 type uop = Neg | Not 
@@ -45,11 +45,12 @@ and access_node =
 
 and stmt = stmt_node annotated_node
 and stmt_node =
-  | If of expr * stmt * stmt         (* Conditional                 *)
-  | While of expr * stmt             (* While loop                  *)
-  | Expr of expr                     (* Expression statement   e;   *)
-  | Return of expr option            (* Return statement            *)
-  | Block of stmtordec list          (* Block: grouping and scope   *)
+  | If of expr * stmt * stmt         (* Conditional                    *)
+  | IfThen of expr * stmt            (* Conditional without else block *)
+  | While of expr * stmt             (* While loop                     *)
+  | Expr of expr                     (* Expression statement   e;      *)
+  | Return of expr option            (* Return statement               *)
+  | Block of stmtordec list          (* Block: grouping and scope      *)
 [@@deriving show]
 
 and stmtordec = stmtordec_node annotated_node

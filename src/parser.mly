@@ -38,8 +38,9 @@
 %token COMMA ","
 %token SEMICOLON ";"
 %token RIF "&" 
+%token AND_BIT "&&"
+%token OR_BIT "||"
 %token EOF
-%token AND_BIT OR_BIT
 %token <string> ID LCHAR
 %token <int> LINT
 
@@ -70,6 +71,14 @@ program:
     { raise (Syntax_error "error in program") }
 ;
 
+topdecl:
+  | v = var; ";"
+    { Vardec (fst v, snd v) |@| $loc  }
+  
+  | v = var; "("; cont = separated_list(COMMA, var); ")"; b = block
+    { Fundecl ({ typ=fst v; fname=snd v; formals=cont; body=b }) |@| $loc }
+;
+
 types: 
   | INT
     { TypI }
@@ -79,15 +88,6 @@ types:
     { TypV }
   | BOOL
     { TypB }
-;
-
-topdecl:
-  | v = var; ";"
-    { Vardec(fst v, snd v) |@| $loc  }
-  /*
-  | f = fundecl
-    {  { loc=$loc; node=f; id=0} } 
-  */
 ;
 
 var:
@@ -103,107 +103,116 @@ var:
   | t = types; id = ID; "["; "]"
     { (TypA (t, Some(0)), id) }
 
- | t = types; id = ID; "["; a = INT; "]"
-    { (TypA (t, Some(int)), id) } 
-;
-
-
-/*
-
-fundecl: 
-  | t = typ; id = ID; "("; cont = separated_list(COMMA, vardecl); v = vardecl; ")"; b = block 
-    { Prog (Fundecl({ typ=t; fname=id; formals=cont; body=b })) |@| $loc }
+  /* | t = types; id = ID; "["; a = INT; "]"
+    { (TypA (t, Some(a)), id) } */
 ;
 
 block: 
   | "{"; cont = separated_list (SEMICOLON, stmt); "}"
-      { Prog (cont) } 
-  | "{"; cont = separated_list(SEMICOLON, vardecl); "}"
-    { Prog  ( [] ) }
-;
-*/
+    { (Block (Stmt(cont) |@| $loc) |@| $loc) } 
 
-/*
+   /* | "{"; cont = separated_list(SEMICOLON, var); "}"
+    { (Block [Dec(fst cont, snd cont) |@| $loc] |@| $loc ) } 
+  */
+;
+
 stmt:
-  | "return"; e = expr; ";" 
-    { Prog (Access(e)) }
+  | RETURN; e = expr; ";" 
+    { (Return (Some(e)) |@| $loc) }
 
   | e = expr; ";" 
+    { (Expr (e) |@| $loc) }
 
   | b = block 
+    { b }
 
   | WHILE; "("; e = expr; ")"; b = block 
+    { (While (e, b) |@| $loc) }
 
-  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = block
+  /* | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = block
+    { () } */
 
   | IF; "("; e = expr; ")"; s1 = stmt; ELSE; s2 = stmt  
+    { (If (e, s1, s2) |@| $loc ) }
 
   | IF; "("; e = expr; ")"; s1 = stmt
+    { (IfThen (e, s1) |@| $loc ) }
+
 ;
 
 expr: 
-  | r = expr 
-    { Prog r }
+  | r = rexpr 
+    { r }
 
   | l = lexpr    
-    { Prog l }
+    { (Access (l) |@| $loc) }
 ;
 
 lexpr:
   | id = ID 
-    { Prog (AccVar(id)) }
+    { (AccVar(id) |@| $loc ) }
 
-  | "("; l = lexpr; ")" 
+  | "("; l = lexpr; ")"
+    { l } 
 
   | "*"; l = lexpr 
+    { l }
 
-  | "*"; a = AExpr 
+  /* | "*"; a = AExpr */
 
   | l = lexpr; "["; e = expr; "]"
+    { (AccIndex(l, e) |@| $loc ) }
 ;
 
 rexpr: 
-  | a = Aexpr 
+  /* | a = Aexpr */
 
-  | id = ID; "("; cont = separated_list(COMMA, expr); e2 = expr; ")" 
+  | id = ID; "("; cont = separated_list(COMMA, expr); ")" 
+    { Call(id, cont) |@| $loc }
 
   | l = lexpr; "="; e = expr 
+    { Assign(l, e) |@| $loc }
 
   | "!"; e = expr 
+    { UnaryOp(Not, e) |@| $loc }
 
   | "-"; e = expr 
+    { UnaryOp(Neg, e) |@| $loc }
 
   | e1 = expr; b = binop; e2 = expr 
+    { BinaryOp(b, e1, e2) |@| $loc }
 ;
 
 binop:
   | "+" 
-
+    { Add }
   | "-" 
-
+    { Sub }
   | "*" 
-
+    { Mult }
   | "%" 
-
+    { Mod }
   | "/" 
-
+    { Div }
   | "&&" 
-
+    { And_bit }
   | "||" 
-
+    { Or_bit }
   | "<" 
-
+    { Less }
   | ">" 
-
+    { Greater }
   | "<=" 
-
+    { Leq }
   | ">=" 
-
+    { Geq }
   | "==" 
-
+    { Equal }
   | "!="
+    { Neq }
 ;
 
+/*
 aexpr:
   | INT 
 
