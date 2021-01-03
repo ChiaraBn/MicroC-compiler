@@ -4,19 +4,42 @@
 
 %{
     open Ast
+    open Util
 
-    (* Define here your utility functions *)
+    exception SyntaxError of string
 
+    (* Annotated node *)
+    let (|@|) node loc = { node = node; loc = loc };;
 %}
 
 /* Tokens declarations */
 %token IF ELSE RETURN WHILE FOR 
-%token INT CHAR BOOL VOID NULL
+%token INT CHAR BOOL VOID NULL 
 %token TRUE FALSE
-%token PLUS MINUS TIMES DIV MODULE ASSIGN
-%token EQ NOTEQ LESS GREATER LEQ GEQ NOT
-%token LPAREN RPAREN LSQUAREPAREN RSQUAREPAREN LBRACHPAREN RBRACHPAREN EOF
-%token AND_BIT AND OR_BIT SEMICOLON
+%token PLUS "+"
+%token MINUS "-"
+%token TIMES "*"
+%token DIV  "/"
+%token MODULE "%" 
+%token ASSIGN "="
+%token EQ "==" 
+%token NOTEQ "!="
+%token LESS "<" 
+%token GREATER ">"
+%token LEQ "<=" 
+%token GEQ ">=" 
+%token NOT "!"
+%token LPAREN "("
+%token RPAREN ")"
+%token LSQUAREPAREN "[" 
+%token RSQUAREPAREN "]" 
+%token LBRACHPAREN "{" 
+%token RBRACHPAREN "}" 
+%token COMMA ","
+%token SEMICOLON ";"
+%token RIF "&" 
+%token EOF
+%token AND_BIT OR_BIT
 %token <string> ID LCHAR
 %token <int> LINT
 
@@ -28,7 +51,7 @@
 %nonassoc GREATER LESS GEQ LEQ
 %left     PLUS MINUS 
 %left     TIMES DIV MODULE
-%nonassoc NOT AND
+%nonassoc NOT RIF
 %nonassoc LSQUAREPAREN 
 
 /* Starting symbol */
@@ -39,65 +62,159 @@
 
 /* Grammar specification */
 program:
-  | expr
-  | EOF                      
-    { Prog([]) }
+  | f = list(topdecl)        
+    { Prog f }
+  | EOF
+    { Prog ([]) }
+  | error                     
+    { raise (Syntax_error "error in program") }
 ;
 
-expr:
-  | e1 = simple_expr
-    { e1 }
+types: 
+  | INT
+    { TypI }
+  | CHAR 
+    { TypC }
+  | VOID
+    { TypV }
+  | BOOL
+    { TypB }
+;
+
+topdecl:
+  | v = var; ";"
+    { Vardec(fst v, snd v) |@| $loc  }
   /*
-  | e1 = expr PLUS e2 = expr
-    { AccBinOp(Add, e1, e2) }
-  | e1 = expr MINUS e2 = expr
-    { AccBinOp(Sub, e1, e2) }
-  | e1 = expr TIMES e2 = expr
-    { AccBinOp(Mult, e1, e2) }
-  | e1 = expr DIV e2 = expr
-    { AccBinOp(Div, e1, e2) }
-  | e1 = expr MODULE e2 = expr
-    { AccBinOp(Mod, e1, e2) }
-
-  | e1 = expr LESS e2 = expr
-    { AccBinOp(Less, e1, e2) }
-  | e1 = expr GREATER e2 = expr
-    { AccBinOp(Greater, e1, e2) }
-  | e1 = expr LEQ e2 = expr
-    { AccBinOp(Leq, e1, e2) }
-  | e1 = expr GEQ e2 = expr
-    { AccBinOp(Geq, e1, e2) }
-  | e1 = expr EQ e2 = expr
-    { AccBinOp(Equal, e1, e2) }
-  | e1 = expr NOTEQ e2 = expr
-    { AccBinOp(Neq, e1, e2) }
-  | e1 = expr ASSIGN e2 = expr
-    { AccBinOp(Assign, e1, e2) }
-  | NOT e1 = expr
-    { AccUnOp(Not, e1) }
-    */
+  | f = fundecl
+    {  { loc=$loc; node=f; id=0} } 
+  */
 ;
 
-simple_expr:
-  | i = LINT
-    { AccInt(i) }
-  | c = LCHAR
-    { AccChar (c) }
-  | TRUE
-    { AccBool (true) }
-  | FALSE
-    { AccBool (false) }
-  | id = ID
-    { AccVar(id) }
-  | LPAREN e = expr RPAREN
-    { e }
+var:
+  | t = types; id = ID
+    { (t, id) }
+
+  | t = types; "*"; id = ID
+    { (TypP(t), id) }
+
+  | t = types; "("; v = var; ")"
+    { v }
+
+  | t = types; id = ID; "["; "]"
+    { (TypA (t, Some(0)), id) }
+
+ | t = types; id = ID; "["; a = INT; "]"
+    { (TypA (t, Some(int)), id) } 
 ;
+
 
 /*
-application:
-  | e1 = simple_expr e2=simple_expr
-    { Call(e1, e2) }
-  | e1 = application e2=simple_expr
-    { Call(e1, e2) }
+
+fundecl: 
+  | t = typ; id = ID; "("; cont = separated_list(COMMA, vardecl); v = vardecl; ")"; b = block 
+    { Prog (Fundecl({ typ=t; fname=id; formals=cont; body=b })) |@| $loc }
+;
+
+block: 
+  | "{"; cont = separated_list (SEMICOLON, stmt); "}"
+      { Prog (cont) } 
+  | "{"; cont = separated_list(SEMICOLON, vardecl); "}"
+    { Prog  ( [] ) }
+;
+*/
+
+/*
+stmt:
+  | "return"; e = expr; ";" 
+    { Prog (Access(e)) }
+
+  | e = expr; ";" 
+
+  | b = block 
+
+  | WHILE; "("; e = expr; ")"; b = block 
+
+  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = block
+
+  | IF; "("; e = expr; ")"; s1 = stmt; ELSE; s2 = stmt  
+
+  | IF; "("; e = expr; ")"; s1 = stmt
+;
+
+expr: 
+  | r = expr 
+    { Prog r }
+
+  | l = lexpr    
+    { Prog l }
+;
+
+lexpr:
+  | id = ID 
+    { Prog (AccVar(id)) }
+
+  | "("; l = lexpr; ")" 
+
+  | "*"; l = lexpr 
+
+  | "*"; a = AExpr 
+
+  | l = lexpr; "["; e = expr; "]"
+;
+
+rexpr: 
+  | a = Aexpr 
+
+  | id = ID; "("; cont = separated_list(COMMA, expr); e2 = expr; ")" 
+
+  | l = lexpr; "="; e = expr 
+
+  | "!"; e = expr 
+
+  | "-"; e = expr 
+
+  | e1 = expr; b = binop; e2 = expr 
+;
+
+binop:
+  | "+" 
+
+  | "-" 
+
+  | "*" 
+
+  | "%" 
+
+  | "/" 
+
+  | "&&" 
+
+  | "||" 
+
+  | "<" 
+
+  | ">" 
+
+  | "<=" 
+
+  | ">=" 
+
+  | "==" 
+
+  | "!="
+;
+
+aexpr:
+  | INT 
+
+  | CHAR 
+
+  | BOOL 
+
+  | "NULL" 
+
+  | "("; r = rexpr; ")" 
+
+  | "&"; l = lexpr
 ;
 */

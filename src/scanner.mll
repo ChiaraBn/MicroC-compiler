@@ -47,7 +47,7 @@ rule token = parse
                               with Not_found ->
 			                   ID(word)
                             }
-        
+
     | '+'                   { PLUS }
     | '-'                   { MINUS }
     | '*'                   { TIMES }
@@ -70,9 +70,10 @@ rule token = parse
     | '{'                   { LBRACHPAREN }
     | '}'                   { RBRACHPAREN }
     | "&&"                  { AND_BIT }
-    | '&'                   { AND }
+    | '&'                   { RIF }
     | "||"                  { OR_BIT }
     | ';'                   { SEMICOLON }
+    | ','                   { COMMA }
 
     | "/*"                  { print_endline "comments start"; comments 0 lexbuf }
     | "//"                  { print_endline "comments start"; comments_one_line lexbuf }
