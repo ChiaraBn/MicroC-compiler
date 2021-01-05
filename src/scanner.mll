@@ -19,26 +19,30 @@
             ("char", CHAR);
             ("bool", BOOL);
             ("void", VOID);
-            ("NULL", NULL);
-            
-            ("true", TRUE);
-            ("false", FALSE)
         ]
 }
 
 let letter = ['a'-'z' 'A'-'Z']
-let lit_letter = '\'' letter+ '\''
+let lit_char = ['a'-'z' 'A'-'Z' '0'-'9']
+
 let digit = ['0' - '9']
 let identifier = _ | letter (letter | digit | '_')*
 
+    (* | null                  { NULL(unit) } *)
+    
 rule token = parse
     | digit+ as inum        { 
                               let num = int_of_string inum in
 			                  LINT(num)
                             }
-    | lit_letter+ as ichar  { 
-                              let c = ichar in
-                              LCHAR(c)
+
+    | "true"                { LBOOL(true) }
+    | "false"               { LBOOL(false) }
+
+    | "null"                { NULL() }
+
+    | lit_char as lchar     { 
+                              LCHAR(lchar)
                             }
     
     | identifier as word    { 

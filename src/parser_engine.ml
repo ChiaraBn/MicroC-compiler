@@ -1,6 +1,6 @@
 open Ast
 
-(* Entry point *)
+(** aaaaaaaaaaaaaaaaa *)
 let parse lexbuf =
   try Parser.program Scanner.token lexbuf with
   | Util.Syntax_error msg -> Util.raise_syntax_error lexbuf msg

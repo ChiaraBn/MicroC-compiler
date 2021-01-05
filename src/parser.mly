@@ -14,8 +14,8 @@
 
 /* Tokens declarations */
 %token IF ELSE RETURN WHILE FOR 
-%token INT CHAR BOOL VOID NULL 
-%token TRUE FALSE
+%token INT CHAR BOOL VOID /*   */
+/* %token TRUE FALSE vedi con lbool*/
 %token PLUS "+"
 %token MINUS "-"
 %token TIMES "*"
@@ -41,8 +41,12 @@
 %token AND_BIT "&&"
 %token OR_BIT "||"
 %token EOF
-%token <string> ID LCHAR
+
+%token <string> ID
+%token <char> LCHAR
 %token <int> LINT
+%token <bool> LBOOL
+%token <unit> NULL
 
 /* Precedence and associativity specification */
 %right    ASSIGN
@@ -68,7 +72,7 @@ program:
   | EOF
     { Prog ([]) }
   | error                     
-    { raise (Syntax_error "error in program") }
+    { raise (Syntax_error "parser error") }
 ;
 
 topdecl:
@@ -103,18 +107,30 @@ var:
   | t = types; id = ID; "["; "]"
     { (TypA (t, Some(0)), id) }
 
-  /* | t = types; id = ID; "["; a = INT; "]"
-    { (TypA (t, Some(a)), id) } */
+  | t = types; id = ID; "["; a = LINT; "]"
+    { (TypA (t, Some(a)), id) } 
 ;
 
-block: 
+block:
   | "{"; cont = separated_list (SEMICOLON, stmt); "}"
-    { (Block (Stmt(cont) |@| $loc) |@| $loc) } 
+    { (Block [ (Stmt(List.hd(cont)) |@| $loc) ] |@| $loc) } 
+ 
+  /*
+  | "{"; cont = declarations; "}"
+    { Block (cont) |@| $loc }
+  
 
-   /* | "{"; cont = separated_list(SEMICOLON, var); "}"
-    { (Block [Dec(fst cont, snd cont) |@| $loc] |@| $loc ) } 
-  */
+  | "{"; cont = separated_list(SEMICOLON, var); "}"
+    { (Block [ ( Dec(List.hd(fst cont), List.hd(snd cont)) |@| $loc) ]) |@| $loc } 
+  ;
+  
+
+declarations:
+  | { [] }
+  | v = var; vv = declarations
+    { (Dec(fst v, snd v)|@| $loc); v::vv }
 ;
+*/
 
 stmt:
   | RETURN; e = expr; ";" 
@@ -129,8 +145,8 @@ stmt:
   | WHILE; "("; e = expr; ")"; b = block 
     { (While (e, b) |@| $loc) }
 
-  /* | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = block
-    { () } */
+  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = block
+    { (For (e1, e2, e3, b) |@| $loc) } 
 
   | IF; "("; e = expr; ")"; s1 = stmt; ELSE; s2 = stmt  
     { (If (e, s1, s2) |@| $loc ) }
@@ -158,14 +174,16 @@ lexpr:
   | "*"; l = lexpr 
     { l }
 
-  /* | "*"; a = AExpr */
+  | "*"; a = aexpr 
+    { (AccDeref(a) |@| $loc ) }
 
   | l = lexpr; "["; e = expr; "]"
     { (AccIndex(l, e) |@| $loc ) }
 ;
 
 rexpr: 
-  /* | a = Aexpr */
+  | a = aexpr 
+    { a }
 
   | id = ID; "("; cont = separated_list(COMMA, expr); ")" 
     { Call(id, cont) |@| $loc }
@@ -181,6 +199,26 @@ rexpr:
 
   | e1 = expr; b = binop; e2 = expr 
     { BinaryOp(b, e1, e2) |@| $loc }
+;
+
+aexpr:
+  | i = LINT 
+    { ILiteral(i) |@| $loc } 
+
+  | c = LCHAR 
+    { CLiteral(c) |@| $loc }
+  
+  | b = LBOOL 
+    { BLiteral (b) |@| $loc }
+  
+  | n = NULL
+    { NLiteral() |@| $loc }
+
+  | "("; r = rexpr; ")" 
+    { r }
+
+  | "&"; l = lexpr
+    { Addr(l) |@| $loc }
 ;
 
 binop:
@@ -211,19 +249,3 @@ binop:
   | "!="
     { Neq }
 ;
-
-/*
-aexpr:
-  | INT 
-
-  | CHAR 
-
-  | BOOL 
-
-  | "NULL" 
-
-  | "("; r = rexpr; ")" 
-
-  | "&"; l = lexpr
-;
-*/

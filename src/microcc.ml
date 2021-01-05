@@ -1,6 +1,6 @@
 open Ast
 
-(* main entry point *)
+(** Main entry point *)
 let () =
 
   if Array.length (Sys.argv) == 2 then
