@@ -2,7 +2,7 @@ type binop = Add | Sub | Mult | Div  | Mod | Equal | Neq | Less | Leq |
              Greater | Geq | And | Or | Comma | Assign | And_bit | Or_bit
 [@@deriving show]
 
-type uop = Neg | Not 
+type uop = Neg | Not | Incr | Decr
 [@@deriving show]
 
 type identifier = string 
@@ -16,6 +16,7 @@ type 'a annotated_node = {loc : position[@opaque]; node : 'a} (*; id : int } *)
 
 type typ =
   | TypI                             (** Type int                    *)
+  | TypF                             (** Type float                    *)
   | TypB                             (** Type bool                   *)
   | TypC                             (** Type char                   *)
   | TypA of typ * int option         (** Array type                  *)
@@ -29,6 +30,7 @@ and expr_node =
   | Assign of access * expr          (** x=e  or  *p=e  or  a[e]=e   *)
   | Addr of access                   (** &x   or  &*p   or  &a[e]    *)
   | ILiteral of int                  (** Integer literal             *)
+  | FLiteral of float                (** Float literal             *)
   | CLiteral of char                 (** Char literal                *)
   | BLiteral of bool                 (** Bool literal                *)
   | NLiteral of unit                 (** NULL literal                *)
@@ -49,6 +51,7 @@ and stmt_node =
   | If of expr * stmt * stmt         (** Conditional                    *)
   | IfThen of expr * stmt            (** Conditional without else block *)
   | While of expr * stmt             (** While loop                     *)
+  | Do of stmt * expr                (** Do-while loop                     *)
   | For of expr * expr * expr * stmt (** For loop                     *)
   | Expr of expr                     (** Expression statement   e;      *)
   | Return of expr option            (** Return statement               *)

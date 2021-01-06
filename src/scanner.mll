@@ -13,9 +13,13 @@
             ("if", IF);
             ("else", ELSE);
             ("return", RETURN);
+
             ("while", WHILE);
             ("for", FOR);
+            ("do", DO);
+
             ("int", INT);
+            ("float", FLOAT);
             ("char", CHAR);
             ("bool", BOOL);
             ("void", VOID);
@@ -25,15 +29,18 @@
 let letter = ['a'-'z' 'A'-'Z']
 let lit_char = ['a'-'z' 'A'-'Z' '0'-'9']
 
-let digit = ['0' - '9']
+let digit = ['-']?['0' - '9']
+let fdigit = ['0'-'9']+'.'['0'-'9']+ (['E' 'e'] ['+' '-']? ['0'-'9']+)?
 let identifier = _ | letter (letter | digit | '_')*
 
-    (* | null                  { NULL(unit) } *)
-    
 rule token = parse
     | digit+ as inum        { 
                               let num = int_of_string inum in
 			                  LINT(num)
+                            }
+    | fdigit as fnum        { 
+                              let num = float_of_string fnum in
+                              LFLOAT(num) 
                             }
 
     | "true"                { LBOOL(true) }
@@ -41,9 +48,7 @@ rule token = parse
 
     | "null"                { NULL() }
 
-    | lit_char as lchar     { 
-                              LCHAR(lchar)
-                            }
+    | lit_char as lchar     { LCHAR(lchar) }
     
     | identifier as word    { 
                               try
@@ -57,14 +62,22 @@ rule token = parse
     | '*'                   { TIMES }
     | '/'                   { DIV }
     | '%'                   { MODULE }
-    
+
+    | "++"                  { INCR }
+    | "--"                  { DECR }
+    | "+="                  { ASSIGN_PLUS }
+    | "-="                  { ASSIGN_MINUS }
+    | "*="                  { ASSIGN_TIMES }
+    | "/="                  { ASSIGN_DIV }
+    | "%="                  { ASSIGN_MODULE }
+
     | '<'                   { LESS }
     | '>'                   { GREATER }
     | "<="                  { LEQ }
     | ">="                  { GEQ }
+    | '='                   { ASSIGN }
     | "=="                  { EQ }
     | "!="                  { NOTEQ }
-    | '='                   { ASSIGN }
     | '!'                   { NOT }
     
     | '('                   { LPAREN }
@@ -105,16 +118,6 @@ and comments level = parse
 and comments_one_line = parse
     | _                     { comments_one_line lexbuf }
     | '\n'                  {                                
-                              Printf.printf "comments (%d) end\n";
+                              Printf.printf "comment end\n";
                               Lexing.new_line lexbuf; token lexbuf;
                             }
-
-{
-    let () =
-    let lexbuf = Lexing.from_channel stdin in
-    try
-        while true do
-        token lexbuf
-        done
-    with End_of_file -> ()
-}

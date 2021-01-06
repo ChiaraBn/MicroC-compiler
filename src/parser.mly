@@ -13,38 +13,29 @@
 %}
 
 /* Tokens declarations */
-%token IF ELSE RETURN WHILE FOR 
-%token INT CHAR BOOL VOID /*   */
-/* %token TRUE FALSE vedi con lbool*/
-%token PLUS "+"
-%token MINUS "-"
-%token TIMES "*"
-%token DIV  "/"
-%token MODULE "%" 
+%token IF ELSE RETURN WHILE FOR DO
+%token INT FLOAT CHAR BOOL VOID 
+%token PLUS "+" MINUS "-" TIMES "*" DIV "/" MODULE "%" 
+%token INCR "++" DECR "--"
+
 %token ASSIGN "="
-%token EQ "==" 
-%token NOTEQ "!="
-%token LESS "<" 
-%token GREATER ">"
-%token LEQ "<=" 
-%token GEQ ">=" 
+%token ASSIGN_PLUS ASSIGN_MINUS ASSIGN_TIMES ASSIGN_DIV ASSIGN_MODULE
+
+%token EQ "==" NOTEQ "!="
+%token LESS "<" GREATER ">" LEQ "<=" GEQ ">=" 
 %token NOT "!"
-%token LPAREN "("
-%token RPAREN ")"
-%token LSQUAREPAREN "[" 
-%token RSQUAREPAREN "]" 
-%token LBRACHPAREN "{" 
-%token RBRACHPAREN "}" 
-%token COMMA ","
-%token SEMICOLON ";"
+%token LPAREN "(" RPAREN ")"
+%token LSQUAREPAREN "[" RSQUAREPAREN "]" 
+%token LBRACHPAREN "{" RBRACHPAREN "}" 
+%token COMMA "," SEMICOLON ";"
 %token RIF "&" 
-%token AND_BIT "&&"
-%token OR_BIT "||"
+%token AND_BIT "&&" OR_BIT "||"
 %token EOF
 
 %token <string> ID
 %token <char> LCHAR
 %token <int> LINT
+%token <float> LFLOAT
 %token <bool> LBOOL
 %token <unit> NULL
 
@@ -54,7 +45,7 @@
 %left     AND_BIT
 %left     EQ NOTEQ
 %nonassoc GREATER LESS GEQ LEQ
-%left     PLUS MINUS 
+%left     PLUS MINUS INCR DECR
 %left     TIMES DIV MODULE
 %nonassoc NOT RIF
 %nonassoc LSQUAREPAREN 
@@ -67,12 +58,10 @@
 
 /* Grammar specification */
 program:
-  | f = list(topdecl)        
+  | f = list(topdecl) EOF     
     { Prog f }
-  | EOF
-    { Prog ([]) }
   | error                     
-    { raise (Syntax_error "parser error") }
+    { raise (Syntax_error "Parser error") }
 ;
 
 topdecl:
@@ -92,6 +81,8 @@ types:
     { TypV }
   | BOOL
     { TypB }
+  | FLOAT
+    { TypF }
 ;
 
 var:
@@ -112,48 +103,78 @@ var:
 ;
 
 block:
-  | "{"; cont = separated_list (SEMICOLON, stmt); "}"
-    { (Block [ (Stmt(List.hd(cont)) |@| $loc) ] |@| $loc) } 
- 
-  /*
+  | "{"; cont = statements; "}"
+    { (Block [(Stmt(List.hd(cont)) |@| $loc)] |@| $loc) } 
+  
   | "{"; cont = declarations; "}"
-    { Block (cont) |@| $loc }
-  
-
-  | "{"; cont = separated_list(SEMICOLON, var); "}"
-    { (Block [ ( Dec(List.hd(fst cont), List.hd(snd cont)) |@| $loc) ]) |@| $loc } 
-  ;
-  
+    { (Block [Dec(fst (List.hd(cont)), snd (List.hd(cont))) |@| $loc] |@| $loc) } 
+;
 
 declarations:
   | { [] }
-  | v = var; vv = declarations
-    { (Dec(fst v, snd v)|@| $loc); v::vv }
-;
-*/
+
+  | v = var; ";" vv = declarations
+    { v::vv }
+  
+statements:
+  | { [] }
+
+  | st = stmt; ";" sst = statements
+    { st::sst }
 
 stmt:
+  | s = opened_stmt
+    { s }
+  | s = closed_stmt
+    { s }
+;
+
+opened_stmt:
+  | b = block 
+    { b }
+
+  | IF; "("; e = expr; ")"; s1 = simple_stmt
+    { (IfThen (e, s1) |@| $loc ) }
+  
+  | IF; "("; e = expr; ")"; s1 = opened_stmt
+    { (IfThen (e, s1) |@| $loc ) }
+
+  | IF; "("; e = expr; ")"; s1 = closed_stmt; ELSE; s2 = opened_stmt
+    { (If (e, s1, s2) |@| $loc ) }
+
+  | WHILE; "("; e = expr; ")"; b = opened_stmt
+    { (While (e, b) |@| $loc) }
+
+  | DO; "{"; b = opened_stmt; "}"; WHILE; e = expr
+    { (Do (b,e) |@| $loc) }
+
+  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = opened_stmt
+    { (For (e1, e2, e3, b) |@| $loc) } 
+; 
+
+closed_stmt:
+  | s = simple_stmt
+    { s }
+
+  | IF; "("; e = expr; ")"; s1 = closed_stmt; ELSE; s2 = closed_stmt
+    { (If (e, s1, s2) |@| $loc ) }
+  
+  | WHILE; "("; e = expr; ")"; b = closed_stmt
+    { (While (e, b) |@| $loc) }
+
+  | DO; "{"; b = closed_stmt; "}"; WHILE; e = expr
+    { (Do (b,e) |@| $loc) }
+
+  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = closed_stmt
+    { (For (e1, e2, e3, b) |@| $loc) } 
+;
+
+simple_stmt:
   | RETURN; e = expr; ";" 
     { (Return (Some(e)) |@| $loc) }
 
   | e = expr; ";" 
     { (Expr (e) |@| $loc) }
-
-  | b = block 
-    { b }
-
-  | WHILE; "("; e = expr; ")"; b = block 
-    { (While (e, b) |@| $loc) }
-
-  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = block
-    { (For (e1, e2, e3, b) |@| $loc) } 
-
-  | IF; "("; e = expr; ")"; s1 = stmt; ELSE; s2 = stmt  
-    { (If (e, s1, s2) |@| $loc ) }
-
-  | IF; "("; e = expr; ")"; s1 = stmt
-    { (IfThen (e, s1) |@| $loc ) }
-
 ;
 
 expr: 
@@ -190,12 +211,39 @@ rexpr:
 
   | l = lexpr; "="; e = expr 
     { Assign(l, e) |@| $loc }
+  
+  | l = lexpr; ASSIGN_PLUS; e = expr 
+    { Assign(l, BinaryOp(Add, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
+  
+  | l = lexpr; ASSIGN_MINUS; e = expr 
+    { Assign(l, BinaryOp(Sub, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
+
+  | l = lexpr; ASSIGN_TIMES; e = expr 
+    { Assign(l, BinaryOp(Mult, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
+  
+  | l = lexpr; ASSIGN_DIV; e = expr 
+    { Assign(l, BinaryOp(Div, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
+  
+  | l = lexpr; ASSIGN_MODULE; e = expr 
+    { Assign(l, BinaryOp(Mod, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
 
   | "!"; e = expr 
     { UnaryOp(Not, e) |@| $loc }
 
   | "-"; e = expr 
     { UnaryOp(Neg, e) |@| $loc }
+
+  | "++"; e = expr
+    { UnaryOp (Incr, e) |@| $loc }
+  
+  | e = expr; "++"
+    { UnaryOp (Incr, e) |@| $loc }
+
+  | "--"; e = expr
+    { UnaryOp (Decr, e) |@| $loc }
+  
+  | e = expr; "--"
+    { UnaryOp (Decr, e) |@| $loc }
 
   | e1 = expr; b = binop; e2 = expr 
     { BinaryOp(b, e1, e2) |@| $loc }
@@ -204,6 +252,9 @@ rexpr:
 aexpr:
   | i = LINT 
     { ILiteral(i) |@| $loc } 
+
+  | f = LFLOAT 
+    { FLiteral(f) |@| $loc } 
 
   | c = LCHAR 
     { CLiteral(c) |@| $loc }
