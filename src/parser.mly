@@ -16,10 +16,10 @@
 %token IF ELSE RETURN WHILE FOR DO
 %token INT FLOAT CHAR BOOL VOID 
 %token PLUS "+" MINUS "-" TIMES "*" DIV "/" MODULE "%" 
-%token INCR "++" DECR "--"
+%token INCR "++" DECR "--" 
 
 %token ASSIGN "="
-%token ASSIGN_PLUS ASSIGN_MINUS ASSIGN_TIMES ASSIGN_DIV ASSIGN_MODULE
+%token ASSIGN_PLUS ASSIGN_MINUS ASSIGN_TIMES ASSIGN_DIV ASSIGN_MODULE 
 
 %token EQ "==" NOTEQ "!="
 %token LESS "<" GREATER ">" LEQ "<=" GEQ ">=" 
@@ -33,20 +33,21 @@
 %token EOF
 
 %token <string> ID
-%token <char> LCHAR
-%token <int> LINT
-%token <float> LFLOAT
-%token <bool> LBOOL
-%token <unit> NULL
+%token <char>   LCHAR
+%token <int>    LINT
+%token <float>  LFLOAT
+%token <bool>   LBOOL
+%token <unit>   NULL
 
 /* Precedence and associativity specification */
-%right    ASSIGN
+%right    ASSIGN              /* lowest priority */
 %left     OR_BIT
 %left     AND_BIT
 %left     EQ NOTEQ
 %nonassoc GREATER LESS GEQ LEQ
-%left     PLUS MINUS INCR DECR
+%left     PLUS MINUS INCR DECR 
 %left     TIMES DIV MODULE
+%right    UMINUS
 %nonassoc NOT RIF
 %nonassoc LSQUAREPAREN 
 
@@ -68,7 +69,7 @@ topdecl:
   | v = var; ";"
     { Vardec (fst v, snd v) |@| $loc  }
   
-  | v = var; "("; cont = separated_list(COMMA, var); ")"; b = block
+  | v = var; "("; cont = separated_list(COMMA, var); ")"; b = block 
     { Fundecl ({ typ=fst v; fname=snd v; formals=cont; body=b }) |@| $loc }
 ;
 
@@ -103,24 +104,17 @@ var:
 ;
 
 block:
-  | "{"; cont = statements; "}"
-    { (Block [(Stmt(List.hd(cont)) |@| $loc)] |@| $loc) } 
-  
-  | "{"; cont = declarations; "}"
-    { (Block [Dec(fst (List.hd(cont)), snd (List.hd(cont))) |@| $loc] |@| $loc) } 
+  | "{"; c = separated_list(";", cont); "}"
+    { (Block(c) |@| $loc) }
 ;
 
-declarations:
-  | { [] }
+cont:
+  | s = stmt
+    { (Stmt(s) |@| $loc) } 
 
-  | v = var; ";" vv = declarations
-    { v::vv }
-  
-statements:
-  | { [] }
-
-  | st = stmt; ";" sst = statements
-    { st::sst }
+  | d = var
+    { (Dec(fst d, snd d) |@| $loc) } 
+;
 
 stmt:
   | s = opened_stmt
@@ -177,12 +171,52 @@ simple_stmt:
     { (Expr (e) |@| $loc) }
 ;
 
-expr: 
-  | r = rexpr 
+expr:
+  | r = rexpr
     { r }
 
-  | l = lexpr    
+  | l = lexpr
     { (Access (l) |@| $loc) }
+;
+
+rexpr:
+  | p = primitive
+    { p }
+
+  | NULL
+    { NLiteral() |@| $loc }
+
+  | c = call
+    { c }
+
+  | a = assignment
+    { a }
+
+  | u = unary
+    { u }
+
+  | b = binary
+    { b }
+;
+
+primitive:
+  | i = LINT 
+    { ILiteral(i) |@| $loc } 
+
+  | f = LFLOAT 
+    { FLiteral(f) |@| $loc } 
+
+  | c = LCHAR 
+    { CLiteral(c) |@| $loc }
+  
+  | b = LBOOL 
+    { BLiteral (b) |@| $loc }
+
+  | "("; r = rexpr; ")" 
+    { r }
+
+  | "&"; l = lexpr
+    { Addr(l) |@| $loc }
 ;
 
 lexpr:
@@ -195,42 +229,43 @@ lexpr:
   | "*"; l = lexpr 
     { l }
 
-  | "*"; a = aexpr 
+  | "*"; a = primitive 
     { (AccDeref(a) |@| $loc ) }
 
   | l = lexpr; "["; e = expr; "]"
     { (AccIndex(l, e) |@| $loc ) }
 ;
 
-rexpr: 
-  | a = aexpr 
-    { a }
-
-  | id = ID; "("; cont = separated_list(COMMA, expr); ")" 
+call:
+  id = ID; "("; cont = separated_list(COMMA, expr); ")" 
     { Call(id, cont) |@| $loc }
+;
 
-  | l = lexpr; "="; e = expr 
+assignment:
+  | l = lexpr; ASSIGN; e = expr 
     { Assign(l, e) |@| $loc }
-  
-  | l = lexpr; ASSIGN_PLUS; e = expr 
+
+  | l = lexpr; ASSIGN_PLUS; e = expr %prec PLUS
     { Assign(l, BinaryOp(Add, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
   
-  | l = lexpr; ASSIGN_MINUS; e = expr 
+  | l = lexpr; ASSIGN_MINUS; e = expr %prec MINUS
     { Assign(l, BinaryOp(Sub, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
 
-  | l = lexpr; ASSIGN_TIMES; e = expr 
+  | l = lexpr; ASSIGN_TIMES; e = expr %prec TIMES
     { Assign(l, BinaryOp(Mult, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
   
-  | l = lexpr; ASSIGN_DIV; e = expr 
+  | l = lexpr; ASSIGN_DIV; e = expr %prec DIV
     { Assign(l, BinaryOp(Div, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
   
-  | l = lexpr; ASSIGN_MODULE; e = expr 
+  | l = lexpr; ASSIGN_MODULE; e = expr %prec MODULE
     { Assign(l, BinaryOp(Mod, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
+;
 
+unary:
   | "!"; e = expr 
     { UnaryOp(Not, e) |@| $loc }
 
-  | "-"; e = expr 
+  | "-"; e = expr %prec UMINUS
     { UnaryOp(Neg, e) |@| $loc }
 
   | "++"; e = expr
@@ -244,49 +279,36 @@ rexpr:
   
   | e = expr; "--"
     { UnaryOp (Decr, e) |@| $loc }
+;
 
-  | e1 = expr; b = binop; e2 = expr 
+binary:
+  | e1 = expr; b = mult_op; e2 = expr %prec TIMES
+    { BinaryOp(b, e1, e2) |@| $loc }
+    
+  | e1 = expr; b = add_op; e2 = expr %prec PLUS
+    { BinaryOp(b, e1, e2) |@| $loc }
+
+  | e1 = expr; b = boolean_op; e2 = expr %prec GREATER
     { BinaryOp(b, e1, e2) |@| $loc }
 ;
 
-aexpr:
-  | i = LINT 
-    { ILiteral(i) |@| $loc } 
-
-  | f = LFLOAT 
-    { FLiteral(f) |@| $loc } 
-
-  | c = LCHAR 
-    { CLiteral(c) |@| $loc }
-  
-  | b = LBOOL 
-    { BLiteral (b) |@| $loc }
-  
-  | n = NULL
-    { NLiteral() |@| $loc }
-
-  | "("; r = rexpr; ")" 
-    { r }
-
-  | "&"; l = lexpr
-    { Addr(l) |@| $loc }
+mult_op:
+  | "*"
+    { Mult }
+  | "/"
+    { Div }
+  | "%"
+    { Mod }
 ;
 
-binop:
-  | "+" 
+add_op:
+  | "+"
     { Add }
-  | "-" 
+  | "-"
     { Sub }
-  | "*" 
-    { Mult }
-  | "%" 
-    { Mod }
-  | "/" 
-    { Div }
-  | "&&" 
-    { And_bit }
-  | "||" 
-    { Or_bit }
+;
+
+boolean_op:
   | "<" 
     { Less }
   | ">" 
@@ -299,4 +321,8 @@ binop:
     { Equal }
   | "!="
     { Neq }
+  | "&&" 
+    { And_bit }
+  | "||" 
+    { Or_bit }
 ;
