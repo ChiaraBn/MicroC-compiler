@@ -1,0 +1,1195 @@
+program: VOID ID LPAREN RPAREN LBRACHPAREN DECR NULL WHILE
+##
+## Ends in an error in state: 89.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . INCR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> DECR expr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## DECR expr
+##
+
+The DECR token must be followed by a not NULL expression.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DECR WHILE
+##
+## Ends in an error in state: 48.
+##
+## unary -> DECR . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## DECR
+##
+
+The DECR token must be followed by a not NULL expression.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN LBRACHPAREN RBRACHPAREN RBRACHPAREN VOID
+##
+## Ends in an error in state: 129.
+##
+## opened_stmt -> DO LBRACHPAREN opened_stmt RBRACHPAREN . WHILE expr [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN opened_stmt RBRACHPAREN
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN LBRACHPAREN RBRACHPAREN RBRACHPAREN WHILE NULL WHILE
+##
+## Ends in an error in state: 131.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## opened_stmt -> DO LBRACHPAREN opened_stmt RBRACHPAREN WHILE expr . [ SEMICOLON RBRACHPAREN ]
+## unary -> expr . INCR [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN opened_stmt RBRACHPAREN WHILE expr
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN LBRACHPAREN RBRACHPAREN RBRACHPAREN WHILE WHILE
+##
+## Ends in an error in state: 130.
+##
+## opened_stmt -> DO LBRACHPAREN opened_stmt RBRACHPAREN WHILE . expr [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN opened_stmt RBRACHPAREN WHILE
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN LBRACHPAREN RBRACHPAREN WHILE
+##
+## Ends in an error in state: 128.
+##
+## opened_stmt -> DO LBRACHPAREN opened_stmt . RBRACHPAREN WHILE expr [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN opened_stmt
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN NULL SEMICOLON RBRACHPAREN VOID
+##
+## Ends in an error in state: 135.
+##
+## closed_stmt -> DO LBRACHPAREN closed_stmt RBRACHPAREN . WHILE expr [ SEMICOLON RBRACHPAREN ELSE ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN closed_stmt RBRACHPAREN
+##
+
+The body of a block shouldn't be of NULL type.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN NULL SEMICOLON RBRACHPAREN WHILE NULL WHILE
+##
+## Ends in an error in state: 137.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR AND_BIT ]
+## closed_stmt -> DO LBRACHPAREN closed_stmt RBRACHPAREN WHILE expr . [ SEMICOLON RBRACHPAREN ELSE ]
+## unary -> expr . INCR [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN closed_stmt RBRACHPAREN WHILE expr
+##
+
+The body of a block shouldn't be of NULL type.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN NULL SEMICOLON RBRACHPAREN WHILE WHILE
+##
+## Ends in an error in state: 136.
+##
+## closed_stmt -> DO LBRACHPAREN closed_stmt RBRACHPAREN WHILE . expr [ SEMICOLON RBRACHPAREN ELSE ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN closed_stmt RBRACHPAREN WHILE
+##
+
+The body of a block shouldn't be of NULL type.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN NULL SEMICOLON WHILE
+##
+## Ends in an error in state: 134.
+##
+## closed_stmt -> DO LBRACHPAREN closed_stmt . RBRACHPAREN WHILE expr [ SEMICOLON RBRACHPAREN ELSE ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN closed_stmt
+##
+
+The body of a block shouldn't be of NULL type.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO LBRACHPAREN VOID
+##
+## Ends in an error in state: 126.
+##
+## closed_stmt -> DO LBRACHPAREN . closed_stmt RBRACHPAREN WHILE expr [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> DO LBRACHPAREN . opened_stmt RBRACHPAREN WHILE expr [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## DO LBRACHPAREN
+##
+
+The body of a block shouldn't be of VOID type.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN DO WHILE
+##
+## Ends in an error in state: 125.
+##
+## closed_stmt -> DO . LBRACHPAREN closed_stmt RBRACHPAREN WHILE expr [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> DO . LBRACHPAREN opened_stmt RBRACHPAREN WHILE expr [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## DO
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN FOR LPAREN NULL SEMICOLON NULL SEMICOLON NULL RPAREN VOID
+##
+## Ends in an error in state: 124.
+##
+## closed_stmt -> FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN . closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN . opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN
+##
+
+The body of a block shouldn't be of NULL type.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN FOR LPAREN NULL SEMICOLON NULL SEMICOLON NULL WHILE
+##
+## Ends in an error in state: 123.
+##
+## binary -> expr . mult_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## closed_stmt -> FOR LPAREN expr SEMICOLON expr SEMICOLON expr . RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> FOR LPAREN expr SEMICOLON expr SEMICOLON expr . RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+## unary -> expr . INCR [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN expr SEMICOLON expr SEMICOLON expr
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN FOR LPAREN NULL SEMICOLON NULL SEMICOLON WHILE
+##
+## Ends in an error in state: 122.
+##
+## closed_stmt -> FOR LPAREN expr SEMICOLON expr SEMICOLON . expr RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> FOR LPAREN expr SEMICOLON expr SEMICOLON . expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN expr SEMICOLON expr SEMICOLON
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN FOR LPAREN NULL SEMICOLON NULL WHILE
+##
+## Ends in an error in state: 121.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## closed_stmt -> FOR LPAREN expr SEMICOLON expr . SEMICOLON expr RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> FOR LPAREN expr SEMICOLON expr . SEMICOLON expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+## unary -> expr . INCR [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN expr SEMICOLON expr
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN FOR LPAREN NULL SEMICOLON WHILE
+##
+## Ends in an error in state: 120.
+##
+## closed_stmt -> FOR LPAREN expr SEMICOLON . expr SEMICOLON expr RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> FOR LPAREN expr SEMICOLON . expr SEMICOLON expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN expr SEMICOLON
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN FOR LPAREN NULL WHILE
+##
+## Ends in an error in state: 119.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## closed_stmt -> FOR LPAREN expr . SEMICOLON expr SEMICOLON expr RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> FOR LPAREN expr . SEMICOLON expr SEMICOLON expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+## unary -> expr . INCR [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN expr
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN FOR LPAREN WHILE
+##
+## Ends in an error in state: 118.
+##
+## closed_stmt -> FOR LPAREN . expr SEMICOLON expr SEMICOLON expr RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> FOR LPAREN . expr SEMICOLON expr SEMICOLON expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN FOR WHILE
+##
+## Ends in an error in state: 117.
+##
+## closed_stmt -> FOR . LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> FOR . LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## FOR
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN NULL WHILE
+##
+## Ends in an error in state: 80.
+##
+## assignment -> lexpr ASSIGN expr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . INCR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN expr
+##
+
+Could not assign NULL value.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN WHILE
+##
+## Ends in an error in state: 79.
+##
+## assignment -> lexpr ASSIGN . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN
+##
+
+Missing assignment.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN_DIV WHILE
+##
+## Ends in an error in state: 77.
+##
+## assignment -> lexpr ASSIGN_DIV . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN_DIV
+##
+
+Missing assignment.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN_MINUS NULL WHILE
+##
+## Ends in an error in state: 76.
+##
+## assignment -> lexpr ASSIGN_MINUS expr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . INCR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN_MINUS expr
+##
+
+Could not assign NULL value.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN_MINUS WHILE
+##
+## Ends in an error in state: 75.
+##
+## assignment -> lexpr ASSIGN_MINUS . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN_MINUS
+##
+
+Missing assignment.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN_MODULE WHILE
+##
+## Ends in an error in state: 73.
+##
+## assignment -> lexpr ASSIGN_MODULE . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN_MODULE
+##
+
+Missing assignment.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN_PLUS NULL WHILE
+##
+## Ends in an error in state: 72.
+##
+## assignment -> lexpr ASSIGN_PLUS expr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . INCR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN_PLUS expr
+##
+
+Could not assign NULL value.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN_PLUS WHILE
+##
+## Ends in an error in state: 71.
+##
+## assignment -> lexpr ASSIGN_PLUS . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN_PLUS
+##
+
+Missing assignment.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID ASSIGN_TIMES WHILE
+##
+## Ends in an error in state: 53.
+##
+## assignment -> lexpr ASSIGN_TIMES . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr ASSIGN_TIMES
+##
+
+Missing assignment.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID LPAREN NULL COMMA WHILE
+##
+## Ends in an error in state: 94.
+##
+## separated_nonempty_list(COMMA,expr) -> expr COMMA . separated_nonempty_list(COMMA,expr) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## expr COMMA
+##
+
+Null expression.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID LPAREN NULL WHILE
+##
+## Ends in an error in state: 93.
+##
+## binary -> expr . mult_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR COMMA AND_BIT ]
+## binary -> expr . add_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR COMMA AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR COMMA AND_BIT ]
+## separated_nonempty_list(COMMA,expr) -> expr . [ RPAREN ]
+## separated_nonempty_list(COMMA,expr) -> expr . COMMA separated_nonempty_list(COMMA,expr) [ RPAREN ]
+## unary -> expr . INCR [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR COMMA AND_BIT ]
+## unary -> expr . DECR [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## expr
+##
+
+Null expression.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID LPAREN WHILE
+##
+## Ends in an error in state: 47.
+##
+## call -> ID LPAREN . loption(separated_nonempty_list(COMMA,expr)) RPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## ID LPAREN
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID LSQUAREPAREN NULL WHILE
+##
+## Ends in an error in state: 103.
+##
+## binary -> expr . mult_op expr [ TIMES RSQUAREPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES RSQUAREPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES RSQUAREPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## lexpr -> lexpr LSQUAREPAREN expr . RSQUAREPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+## unary -> expr . INCR [ TIMES RSQUAREPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES RSQUAREPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr LSQUAREPAREN expr
+##
+
+Null expression for the type of the array.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID LSQUAREPAREN WHILE
+##
+## Ends in an error in state: 36.
+##
+## lexpr -> lexpr LSQUAREPAREN . expr RSQUAREPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr LSQUAREPAREN
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN ID WHILE
+##
+## Ends in an error in state: 46.
+##
+## call -> ID . LPAREN loption(separated_nonempty_list(COMMA,expr)) RPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## lexpr -> ID . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## ID
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN IF LPAREN NULL RPAREN NULL SEMICOLON ELSE VOID
+##
+## Ends in an error in state: 144.
+##
+## closed_stmt -> IF LPAREN expr RPAREN closed_stmt ELSE . closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> IF LPAREN expr RPAREN closed_stmt ELSE . opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expr RPAREN closed_stmt ELSE
+##
+
+NULL value for the ELSE statement.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN IF LPAREN NULL RPAREN NULL SEMICOLON WHILE
+##
+## Ends in an error in state: 141.
+##
+## closed_stmt -> simple_stmt . [ ELSE ]
+## opened_stmt -> IF LPAREN expr RPAREN simple_stmt . [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expr RPAREN simple_stmt
+##
+
+NULL value for the IF statement.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN IF LPAREN NULL RPAREN VOID
+##
+## Ends in an error in state: 116.
+##
+## closed_stmt -> IF LPAREN expr RPAREN . closed_stmt ELSE closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> IF LPAREN expr RPAREN . simple_stmt [ SEMICOLON RBRACHPAREN ]
+## opened_stmt -> IF LPAREN expr RPAREN . opened_stmt [ SEMICOLON RBRACHPAREN ]
+## opened_stmt -> IF LPAREN expr RPAREN . closed_stmt ELSE opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expr RPAREN
+##
+
+NULL value for the IF statement.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN IF LPAREN NULL RPAREN WHILE LPAREN ID RPAREN ID SEMICOLON WHILE
+##
+## Ends in an error in state: 143.
+##
+## closed_stmt -> IF LPAREN expr RPAREN closed_stmt . ELSE closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> IF LPAREN expr RPAREN closed_stmt . ELSE opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expr RPAREN closed_stmt
+##
+
+NULL value for the clause for the IF statement.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN IF LPAREN NULL WHILE
+##
+## Ends in an error in state: 115.
+##
+## binary -> expr . mult_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## closed_stmt -> IF LPAREN expr . RPAREN closed_stmt ELSE closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> IF LPAREN expr . RPAREN simple_stmt [ SEMICOLON RBRACHPAREN ]
+## opened_stmt -> IF LPAREN expr . RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+## opened_stmt -> IF LPAREN expr . RPAREN closed_stmt ELSE opened_stmt [ SEMICOLON RBRACHPAREN ]
+## unary -> expr . INCR [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expr
+##
+
+NULL value for the clause for the IF statement.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN IF LPAREN WHILE
+##
+## Ends in an error in state: 114.
+##
+## closed_stmt -> IF LPAREN . expr RPAREN closed_stmt ELSE closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> IF LPAREN . expr RPAREN simple_stmt [ SEMICOLON RBRACHPAREN ]
+## opened_stmt -> IF LPAREN . expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+## opened_stmt -> IF LPAREN . expr RPAREN closed_stmt ELSE opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN
+##
+
+Missing clause for the IF statement.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN IF WHILE
+##
+## Ends in an error in state: 113.
+##
+## closed_stmt -> IF . LPAREN expr RPAREN closed_stmt ELSE closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> IF . LPAREN expr RPAREN simple_stmt [ SEMICOLON RBRACHPAREN ]
+## opened_stmt -> IF . LPAREN expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+## opened_stmt -> IF . LPAREN expr RPAREN closed_stmt ELSE opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IF
+##
+
+Missing clause for the IF statement.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN INCR NULL WHILE
+##
+## Ends in an error in state: 96.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> INCR expr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . INCR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## INCR expr
+##
+
+INCR token must be followed by a not null value.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN INCR WHILE
+##
+## Ends in an error in state: 45.
+##
+## unary -> INCR . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## INCR
+##
+
+Missing value after INCR token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN LPAREN ID SEMICOLON
+##
+## Ends in an error in state: 99.
+##
+## assignment -> lexpr . ASSIGN expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## assignment -> lexpr . ASSIGN_PLUS expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## assignment -> lexpr . ASSIGN_MINUS expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## assignment -> lexpr . ASSIGN_TIMES expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## assignment -> lexpr . ASSIGN_DIV expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## assignment -> lexpr . ASSIGN_MODULE expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## expr -> lexpr . [ TIMES PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## lexpr -> LPAREN lexpr . RPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+## lexpr -> lexpr . LSQUAREPAREN expr RSQUAREPAREN [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ DIV DECR ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN lexpr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 46, spurious reduction of production lexpr -> ID
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN LPAREN NULL WHILE
+##
+## Ends in an error in state: 97.
+##
+## expr -> rexpr . [ TIMES PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## primitive -> LPAREN rexpr . RPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN rexpr
+##
+
+NULL statement after left parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN LPAREN WHILE
+##
+## Ends in an error in state: 40.
+##
+## lexpr -> LPAREN . lexpr RPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+## primitive -> LPAREN . rexpr RPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN MINUS WHILE
+##
+## Ends in an error in state: 39.
+##
+## unary -> MINUS . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## MINUS
+##
+
+Missing value after MINUS token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN NOT WHILE
+##
+## Ends in an error in state: 38.
+##
+## unary -> NOT . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## NOT
+##
+
+Missing value after NOT token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN NULL OR_BIT NULL WHILE
+##
+## Ends in an error in state: 58.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr boolean_op expr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . INCR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## expr boolean_op expr
+##
+
+OR_BIT token must have not NULL values.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN NULL OR_BIT WHILE
+##
+## Ends in an error in state: 57.
+##
+## binary -> expr boolean_op . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## expr boolean_op
+##
+
+OR_BIT token must have not NULL values.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN NULL PLUS NULL WHILE
+##
+## Ends in an error in state: 67.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr add_op expr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . INCR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## expr add_op expr
+##
+
+PLUS token must have not NULL values.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN NULL PLUS WHILE
+##
+## Ends in an error in state: 66.
+##
+## binary -> expr add_op . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## expr add_op
+##
+
+PLUS token must have not NULL values.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN NULL SEMICOLON WHILE
+##
+## Ends in an error in state: 155.
+##
+## separated_nonempty_list(SEMICOLON,cont) -> cont . [ RBRACHPAREN ]
+## separated_nonempty_list(SEMICOLON,cont) -> cont . SEMICOLON separated_nonempty_list(SEMICOLON,cont) [ RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## cont
+##
+
+NULL statement before SEMICOLON token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN NULL TIMES WHILE
+##
+## Ends in an error in state: 55.
+##
+## binary -> expr mult_op . expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## expr mult_op
+##
+
+NULL statement before TIMES token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN NULL WHILE
+##
+## Ends in an error in state: 132.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## simple_stmt -> expr . SEMICOLON [ SEMICOLON RBRACHPAREN ELSE ]
+## unary -> expr . INCR [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## expr
+##
+
+NULL statement before TIMES token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN RETURN NULL WHILE
+##
+## Ends in an error in state: 111.
+##
+## binary -> expr . mult_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## simple_stmt -> RETURN expr . SEMICOLON [ SEMICOLON RBRACHPAREN ELSE ]
+## unary -> expr . INCR [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES SEMICOLON PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## RETURN expr
+##
+
+NULL statement before WHILE token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN RETURN WHILE
+##
+## Ends in an error in state: 110.
+##
+## simple_stmt -> RETURN . expr SEMICOLON [ SEMICOLON RBRACHPAREN ELSE ]
+##
+## The known suffix of the stack is as follows:
+## RETURN
+##
+
+Missing return value.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN RIF ID WHILE
+##
+## Ends in an error in state: 105.
+##
+## lexpr -> lexpr . LSQUAREPAREN expr RSQUAREPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+## primitive -> RIF lexpr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## RIF lexpr
+##
+
+Wrong use of referenced value ID.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN RIF LPAREN ID WHILE
+##
+## Ends in an error in state: 34.
+##
+## lexpr -> LPAREN lexpr . RPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+## lexpr -> lexpr . LSQUAREPAREN expr RSQUAREPAREN [ RPAREN LSQUAREPAREN ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN lexpr
+##
+
+Wrong use of referenced value.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN RIF LPAREN WHILE
+##
+## Ends in an error in state: 32.
+##
+## lexpr -> LPAREN . lexpr RPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN
+##
+
+Wrong use of referenced value.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN RIF WHILE
+##
+## Ends in an error in state: 31.
+##
+## primitive -> RIF . lexpr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## RIF
+##
+
+Wrong use of referenced value.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN SEMICOLON
+##
+## Ends in an error in state: 27.
+##
+## block -> LBRACHPAREN . loption(separated_nonempty_list(SEMICOLON,cont)) RBRACHPAREN [ VOID SEMICOLON RBRACHPAREN INT FLOAT EOF CHAR BOOL ]
+##
+## The known suffix of the stack is as follows:
+## LBRACHPAREN
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN TIMES ID WHILE
+##
+## Ends in an error in state: 107.
+##
+## lexpr -> TIMES lexpr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+## lexpr -> lexpr . LSQUAREPAREN expr RSQUAREPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## TIMES lexpr
+##
+
+Wrong use of TIMES token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN TIMES NULL WHILE
+##
+## Ends in an error in state: 52.
+##
+## assignment -> lexpr . ASSIGN expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## assignment -> lexpr . ASSIGN_PLUS expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## assignment -> lexpr . ASSIGN_MINUS expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## assignment -> lexpr . ASSIGN_TIMES expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## assignment -> lexpr . ASSIGN_DIV expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## assignment -> lexpr . ASSIGN_MODULE expr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## expr -> lexpr . [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA AND_BIT ]
+## lexpr -> lexpr . LSQUAREPAREN expr RSQUAREPAREN [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## lexpr
+##
+
+Wrong use of TIMES token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN TIMES WHILE
+##
+## Ends in an error in state: 30.
+##
+## lexpr -> TIMES . lexpr [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+## lexpr -> TIMES . primitive [ TIMES SEMICOLON RSQUAREPAREN RPAREN RBRACHPAREN PLUS OR_BIT NOTEQ MODULE MINUS LSQUAREPAREN LESS LEQ INCR GREATER GEQ EQ ELSE DIV DECR COMMA ASSIGN_TIMES ASSIGN_PLUS ASSIGN_MODULE ASSIGN_MINUS ASSIGN_DIV ASSIGN AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## TIMES
+##
+
+Wrong use of TIMES token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN VOID ID SEMICOLON SEMICOLON
+##
+## Ends in an error in state: 156.
+##
+## separated_nonempty_list(SEMICOLON,cont) -> cont SEMICOLON . separated_nonempty_list(SEMICOLON,cont) [ RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## cont SEMICOLON
+##
+
+Error in VOID ID.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN WHILE LPAREN NULL RPAREN VOID
+##
+## Ends in an error in state: 109.
+##
+## closed_stmt -> WHILE LPAREN expr RPAREN . closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> WHILE LPAREN expr RPAREN . opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## WHILE LPAREN expr RPAREN
+##
+
+NULL value between parenthesis.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN WHILE LPAREN NULL WHILE
+##
+## Ends in an error in state: 108.
+##
+## binary -> expr . mult_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . add_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## binary -> expr . boolean_op expr [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## closed_stmt -> WHILE LPAREN expr . RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> WHILE LPAREN expr . RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+## unary -> expr . INCR [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+## unary -> expr . DECR [ TIMES RPAREN PLUS OR_BIT NOTEQ MODULE MINUS LESS LEQ INCR GREATER GEQ EQ DIV DECR AND_BIT ]
+##
+## The known suffix of the stack is as follows:
+## WHILE LPAREN expr
+##
+
+NULL value before WHILE token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN WHILE LPAREN WHILE
+##
+## Ends in an error in state: 29.
+##
+## closed_stmt -> WHILE LPAREN . expr RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> WHILE LPAREN . expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## WHILE LPAREN
+##
+
+Missing clause for WHILE token.
+
+program: VOID ID LPAREN RPAREN LBRACHPAREN WHILE WHILE
+##
+## Ends in an error in state: 28.
+##
+## closed_stmt -> WHILE . LPAREN expr RPAREN closed_stmt [ SEMICOLON RBRACHPAREN ELSE ]
+## opened_stmt -> WHILE . LPAREN expr RPAREN opened_stmt [ SEMICOLON RBRACHPAREN ]
+##
+## The known suffix of the stack is as follows:
+## WHILE
+##
+
+Missing clause for WHILE token.
+
+program: VOID ID LPAREN RPAREN WHILE
+##
+## Ends in an error in state: 26.
+##
+## topdecl -> var LPAREN loption(separated_nonempty_list(COMMA,var)) RPAREN . block [ VOID INT FLOAT EOF CHAR BOOL ]
+##
+## The known suffix of the stack is as follows:
+## var LPAREN loption(separated_nonempty_list(COMMA,var)) RPAREN
+##
+
+Missing clause for WHILE token.
+
+program: VOID ID LPAREN VOID ID COMMA WHILE
+##
+## Ends in an error in state: 11.
+##
+## separated_nonempty_list(COMMA,var) -> var COMMA . separated_nonempty_list(COMMA,var) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## var COMMA
+##
+
+Missing semicolon.
+
+program: VOID ID LPAREN VOID ID SEMICOLON
+##
+## Ends in an error in state: 10.
+##
+## separated_nonempty_list(COMMA,var) -> var . [ RPAREN ]
+## separated_nonempty_list(COMMA,var) -> var . COMMA separated_nonempty_list(COMMA,var) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## var
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 18, spurious reduction of production var -> types ID
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LPAREN WHILE
+##
+## Ends in an error in state: 9.
+##
+## topdecl -> var LPAREN . loption(separated_nonempty_list(COMMA,var)) RPAREN block [ VOID INT FLOAT EOF CHAR BOOL ]
+##
+## The known suffix of the stack is as follows:
+## var LPAREN
+##
+
+Missing clause for WHILE token.
+
+program: VOID ID LSQUAREPAREN LINT WHILE
+##
+## Ends in an error in state: 21.
+##
+## var -> types ID LSQUAREPAREN LINT . RSQUAREPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## types ID LSQUAREPAREN LINT
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID LSQUAREPAREN WHILE
+##
+## Ends in an error in state: 19.
+##
+## var -> types ID LSQUAREPAREN . RSQUAREPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+## var -> types ID LSQUAREPAREN . LINT RSQUAREPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## types ID LSQUAREPAREN
+##
+
+Missing clause for WHILE token.
+
+program: VOID ID RPAREN
+##
+## Ends in an error in state: 7.
+##
+## topdecl -> var . SEMICOLON [ VOID INT FLOAT EOF CHAR BOOL ]
+## topdecl -> var . LPAREN loption(separated_nonempty_list(COMMA,var)) RPAREN block [ VOID INT FLOAT EOF CHAR BOOL ]
+##
+## The known suffix of the stack is as follows:
+## var
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 18, spurious reduction of production var -> types ID
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID ID SEMICOLON WHILE
+##
+## Ends in an error in state: 160.
+##
+## list(topdecl) -> topdecl . list(topdecl) [ EOF ]
+##
+## The known suffix of the stack is as follows:
+## topdecl
+##
+
+Missing arguments for the FUNCTION declaration.
+
+program: VOID ID WHILE
+##
+## Ends in an error in state: 18.
+##
+## var -> types ID . [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+## var -> types ID . LSQUAREPAREN RSQUAREPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+## var -> types ID . LSQUAREPAREN LINT RSQUAREPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## types ID
+##
+
+Missing arguments for the FUNCTION declaration.
+
+program: VOID LPAREN VOID ID SEMICOLON
+##
+## Ends in an error in state: 16.
+##
+## var -> types LPAREN var . RPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## types LPAREN var
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 18, spurious reduction of production var -> types ID
+##
+
+Unbalanced use of parenthesis.
+
+program: VOID LPAREN WHILE
+##
+## Ends in an error in state: 15.
+##
+## var -> types LPAREN . var RPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## types LPAREN
+##
+
+Missing ID for the function declaration.
+
+program: VOID TIMES WHILE
+##
+## Ends in an error in state: 13.
+##
+## var -> types TIMES . ID [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## types TIMES
+##
+
+Wrong parameters for TIMES token.
+
+program: VOID WHILE
+##
+## Ends in an error in state: 12.
+##
+## var -> types . ID [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+## var -> types . TIMES ID [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+## var -> types . LPAREN var RPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+## var -> types . ID LSQUAREPAREN RSQUAREPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+## var -> types . ID LSQUAREPAREN LINT RSQUAREPAREN [ SEMICOLON RPAREN RBRACHPAREN LPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## types
+##
+
+Wrong ID for the function.
+
+program: WHILE
+##
+## Ends in an error in state: 0.
+##
+## program' -> . program [ # ]
+##
+## The known suffix of the stack is as follows:
+##
+##
+
+Missing clause for WHILE token.

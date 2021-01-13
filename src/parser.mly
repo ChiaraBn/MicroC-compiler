@@ -53,7 +53,7 @@
 
 /* Starting symbol */
 %start program
-%type <Ast.program> program    /* the parser returns a Ast.program value */
+%type <Ast.program> program    
 
 %%
 
@@ -61,6 +61,7 @@
 program:
   | f = list(topdecl) EOF     
     { Prog f }
+
   | error                     
     { raise (Syntax_error "Parser error") }
 ;
@@ -183,9 +184,6 @@ rexpr:
   | p = primitive
     { p }
 
-  | NULL
-    { NLiteral() |@| $loc }
-
   | c = call
     { c }
 
@@ -211,6 +209,9 @@ primitive:
   
   | b = LBOOL 
     { BLiteral (b) |@| $loc }
+
+  | NULL
+    { NLiteral() |@| $loc }
 
   | "("; r = rexpr; ")" 
     { r }
