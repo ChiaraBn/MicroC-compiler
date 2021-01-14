@@ -5,8 +5,7 @@
 open Ast
 open Lexing
 
-(* module I = Parser.MenhirInterpreter *)
-
+(* module I = UnitActionsParser.MenhirInterpreter *)
 
 let parse lexbuf =
   try 
