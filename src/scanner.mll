@@ -1,5 +1,6 @@
 {
     open Parser
+    open Printf
 
     exception Lexing_error of string
 
@@ -23,39 +24,42 @@
             ("char", CHAR);
             ("bool", BOOL);
             ("void", VOID);
+
+            ("true",  LBOOL(true));
+            ("false", LBOOL(false));
+            ("null",  NULL());
         ]
 }
 
 let letter = ['a'-'z' 'A'-'Z']
-let lit_char = ['a'-'z' 'A'-'Z' '0'-'9']
+let lit_char = letter | ['0'-'9']
 
-let digit = ['-']?['0' - '9']
-let fdigit = ['0'-'9']+'.'['0'-'9']+ (['E' 'e'] ['+' '-']? ['0'-'9']+)?
-let identifier = _ | letter (letter | digit | '_')*
+let digit = ['0'-'9']
+let fdigit = digit+'.'digit+ (['E' 'e'] ['+' '-']? digit+)?
+let identifier = ('_' | letter) (letter | digit | '_')*
 
 rule token = parse
     | digit+ as inum        { 
+                              printf "integer: %s \n" inum;
                               let num = int_of_string inum in
 			                  LINT(num)
                             }
+
     | fdigit as fnum        { 
+                              printf "float: %s \n" fnum;
                               let num = float_of_string fnum in
                               LFLOAT(num) 
                             }
 
-    | "true"                { LBOOL(true) }
-    | "false"               { LBOOL(false) }
-
-    | "null"                { NULL() }
-
-    | lit_char as lchar     { LCHAR(lchar) }
-    
     | identifier as word    { 
+                              printf "id: %s \n" word;
                               try
                                Hashtbl.find keyword_table word
                               with Not_found ->
 			                   ID(word)
                             }
+
+    | '\''                  { literal_char lexbuf }
 
     | '+'                   { PLUS }
     | '-'                   { MINUS }
@@ -75,7 +79,7 @@ rule token = parse
     | '>'                   { GREATER }
     | "<="                  { LEQ }
     | ">="                  { GEQ }
-    | '='                   { ASSIGN }
+    | '='                   { printf "assign\n"; ASSIGN }
     | "=="                  { EQ }
     | "!="                  { NOTEQ }
     | '!'                   { NOT }
@@ -98,7 +102,6 @@ rule token = parse
     | [' ' '\t']            { token lexbuf }
     | '\n'                  { Lexing.new_line lexbuf; token lexbuf }
     | eof                   { EOF }
-
     | _ as c                { Util.raise_lexer_error lexbuf ("Illegal character " ^ Char.escaped c) }
 
 and comments level = parse
@@ -116,8 +119,16 @@ and comments level = parse
     | eof                   { print_endline "comments are not closed"; raise End_of_file }
 
 and comments_one_line = parse
-    | _                     { comments_one_line lexbuf }
     | '\n'                  {                                
                               Printf.printf "comment end\n";
                               Lexing.new_line lexbuf; token lexbuf;
                             }
+    | _                     { comments_one_line lexbuf }
+
+and literal_char = parse
+    | lit_char as lchar     { 
+                              printf "lit_char: %c \n" lchar; 
+                              LCHAR(lchar);
+                            }
+    | '\''                  { token lexbuf }
+    | _                     { literal_char lexbuf }

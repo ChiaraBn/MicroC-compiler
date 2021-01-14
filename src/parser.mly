@@ -5,6 +5,7 @@
 %{
     open Ast
     open Util
+    open Printf
 
     exception SyntaxError of string
 
