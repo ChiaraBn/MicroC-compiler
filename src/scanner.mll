@@ -93,7 +93,7 @@ rule token = parse
     | "&&"                  { AND_BIT }
     | '&'                   { RIF }
     | "||"                  { OR_BIT }
-    | ';'                   { SEMICOLON }
+    | ';'                   { printf ";\n"; SEMICOLON }
     | ','                   { COMMA }
 
     | "/*"                  { print_endline "comments start"; comments 0 lexbuf }

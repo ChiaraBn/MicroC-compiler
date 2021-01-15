@@ -3,7 +3,6 @@
  *)
 
 open Ast
-open Lexing
 
 let parse lexbuf =
   try 

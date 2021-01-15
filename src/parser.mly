@@ -119,42 +119,40 @@ cont:
 ;
 
 stmt:
-  | s = opened_stmt
+  | s = open_stmt
     { s }
+
   | s = closed_stmt
     { s }
 ;
 
-opened_stmt:
-  | b = block 
-    { b }
-
-  | IF; "("; e = expr; ")"; s1 = simple_stmt
-    { (IfThen (e, s1) |@| $loc ) }
-  
-  | IF; "("; e = expr; ")"; s1 = opened_stmt
+open_stmt:
+  | IF; "("; e = expr; ")"; s1 = stmt
     { (IfThen (e, s1) |@| $loc ) }
 
-  | IF; "("; e = expr; ")"; s1 = closed_stmt; ELSE; s2 = opened_stmt
+  | IF; "("; e = expr; ")"; s1 = closed_stmt; ELSE; s2 = open_stmt
     { (If (e, s1, s2) |@| $loc ) }
-
-  | WHILE; "("; e = expr; ")"; b = opened_stmt
+  
+  | WHILE; "("; e = expr; ")"; b = open_stmt
     { (While (e, b) |@| $loc) }
 
-  | DO; "{"; b = opened_stmt; "}"; WHILE; e = expr
+  | DO; "{"; b = open_stmt; "}"; WHILE; e = expr
     { (Do (b,e) |@| $loc) }
 
-  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = opened_stmt
+  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = open_stmt
     { (For (e1, e2, e3, b) |@| $loc) } 
-; 
+;
 
 closed_stmt:
+  | b = block
+    { b }
+
   | s = simple_stmt
     { s }
 
   | IF; "("; e = expr; ")"; s1 = closed_stmt; ELSE; s2 = closed_stmt
     { (If (e, s1, s2) |@| $loc ) }
-  
+
   | WHILE; "("; e = expr; ")"; b = closed_stmt
     { (While (e, b) |@| $loc) }
 
@@ -166,10 +164,10 @@ closed_stmt:
 ;
 
 simple_stmt:
-  | RETURN; e = expr; ";" 
-    { (Return (Some(e)) |@| $loc) }
+  | RETURN; e = option(expr); ";"
+    { (Return (e) |@| $loc) }
 
-  | e = expr; ";" 
+  | e = expr 
     { (Expr (e) |@| $loc) }
 ;
 
