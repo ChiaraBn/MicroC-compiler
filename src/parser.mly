@@ -41,7 +41,7 @@
 %token <unit>   NULL
 
 /* Precedence and associativity specification */
-%right    ASSIGN              /* lowest priority */
+%right    ASSIGN
 %left     OR_BIT
 %left     AND_BIT
 %left     EQ NOTEQ
@@ -71,21 +71,21 @@ topdecl:
   | v = var; ";"
     { Vardec (fst v, snd v) |@| $loc  }
   
-  | v = var; "("; cont = separated_list(COMMA, var); ")"; b = block 
-    { Fundecl ({ typ=fst v; fname=snd v; formals=cont; body=b }) |@| $loc }
+  | t = types; id = ID "("; cont = separated_list(COMMA, var); ")"; b = block 
+    { Fundecl ({ typ=t; fname=id; formals=cont; body=b }) |@| $loc }
 ;
 
 types: 
   | INT
     { TypI }
-  | CHAR 
-    { TypC }
-  | VOID
-    { TypV }
-  | BOOL
-    { TypB }
   | FLOAT
     { TypF }
+  | CHAR 
+    { TypC }
+  | BOOL
+    { TypB }
+  | VOID
+    { TypV }
 ;
 
 var:
@@ -119,47 +119,47 @@ cont:
 ;
 
 stmt:
-  | s = open_stmt
+  | s = matched
     { s }
 
-  | s = closed_stmt
+  | s = unmatched
     { s }
 ;
 
-open_stmt:
-  | IF; "("; e = expr; ")"; s1 = stmt
-    { (IfThen (e, s1) |@| $loc ) }
-
-  | IF; "("; e = expr; ")"; s1 = closed_stmt; ELSE; s2 = open_stmt
-    { (If (e, s1, s2) |@| $loc ) }
-  
-  | WHILE; "("; e = expr; ")"; b = open_stmt
-    { (While (e, b) |@| $loc) }
-
-  | DO; "{"; b = open_stmt; "}"; WHILE; e = expr
-    { (Do (b,e) |@| $loc) }
-
-  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = open_stmt
-    { (For (e1, e2, e3, b) |@| $loc) } 
-;
-
-closed_stmt:
-  | b = block
-    { b }
-
+matched:
   | s = simple_stmt
     { s }
 
-  | IF; "("; e = expr; ")"; s1 = closed_stmt; ELSE; s2 = closed_stmt
-    { (If (e, s1, s2) |@| $loc ) }
+  | b = block
+    { b }
 
-  | WHILE; "("; e = expr; ")"; b = closed_stmt
+  | IF; "("; e = expr; ")"; s1 = matched; ELSE; s2 = matched
+    { Printf.printf ("matched\n"); (If (e, s1, s2) |@| $loc ) }
+
+  | WHILE; "("; e = expr; ")"; b = matched
     { (While (e, b) |@| $loc) }
-
-  | DO; "{"; b = closed_stmt; "}"; WHILE; e = expr
+  
+  | DO; "{"; b = matched; "}"; WHILE; e = expr
     { (Do (b,e) |@| $loc) }
 
-  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = closed_stmt
+  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = matched
+    { (For (e1, e2, e3, b) |@| $loc) }
+;
+
+unmatched: 
+  | IF; "("; e = expr; ")"; s1 = stmt
+    { Printf.printf ("ifthen\n"); (IfThen (e, s1) |@| $loc ) }
+
+  | IF; "("; e = expr; ")"; s1 = matched; ELSE; s2 = unmatched 
+    { Printf.printf ("unmatched\n"); (If (e, s1, s2) |@| $loc ) }
+
+  | WHILE; "("; e = expr; ")"; b = unmatched
+    { (While (e, b) |@| $loc) }
+
+  | DO; "{"; b = unmatched; "}"; WHILE; e = expr
+    { (Do (b,e) |@| $loc) }
+
+  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = unmatched 
     { (For (e1, e2, e3, b) |@| $loc) } 
 ;
 

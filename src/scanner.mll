@@ -88,9 +88,9 @@ rule token = parse
     | ')'                   { RPAREN }
     | '['                   { LSQUAREPAREN }
     | ']'                   { RSQUAREPAREN }
-    | '{'                   { LBRACHPAREN }
-    | '}'                   { RBRACHPAREN }
-    | "&&"                  { AND_BIT }
+    | '{'                   { printf "{\n"; LBRACHPAREN }
+    | '}'                   { printf "}\n"; RBRACHPAREN }
+    | "&&"                  { printf "&&\n"; AND_BIT }
     | '&'                   { RIF }
     | "||"                  { OR_BIT }
     | ';'                   { printf ";\n"; SEMICOLON }

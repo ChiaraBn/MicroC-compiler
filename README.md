@@ -29,7 +29,17 @@ Examples of expressions are12,12/3*45and12+3*45-6.
 
 <p>
 
-## Punto 4 
+## PUNTO 2 - Analisi semantica
+- **semant.ml** per l'analisi semantica
+- **symbol table** per memorizzare i tipi delle variabili
+<br>
+
+
+
+<p>
+
+
+## PUNTO 4 
 (scegline quattro)
 
     --> do-while loops;
