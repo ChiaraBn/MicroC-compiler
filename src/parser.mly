@@ -30,7 +30,7 @@
 %token LBRACHPAREN "{" RBRACHPAREN "}" 
 %token COMMA "," SEMICOLON ";"
 %token RIF "&" 
-%token AND_BIT "&&" OR_BIT "||"
+%token AND "&&" OR "||"
 %token EOF
 
 %token <string> ID
@@ -41,9 +41,11 @@
 %token <unit>   NULL
 
 /* Precedence and associativity specification */
+%nonassoc NO_ELSE
+%nonassoc ELSE
 %right    ASSIGN
-%left     OR_BIT
-%left     AND_BIT
+%left     OR
+%left     AND
 %left     EQ NOTEQ
 %nonassoc GREATER LESS GEQ LEQ
 %left     PLUS MINUS INCR DECR 
@@ -105,8 +107,8 @@ var:
     { (TypA (t, Some(a)), id) } 
 ;
 
-block:
-  | "{"; c = separated_list(";", cont); "}"
+%inline block:
+  | "{"; c = list(cont); "}"
     { (Block(c) |@| $loc) }
 ;
 
@@ -114,61 +116,47 @@ cont:
   | s = stmt
     { (Stmt(s) |@| $loc) } 
 
-  | d = var
+  | d = var; ";"
     { (Dec(fst d, snd d) |@| $loc) } 
 ;
 
 stmt:
-  | s = matched
+  | s = selection_stmt
     { s }
-
-  | s = unmatched
-    { s }
-;
-
-matched:
-  | s = simple_stmt
-    { s }
+  
+  | l = loop_stmt
+    { l }
 
   | b = block
     { b }
 
-  | IF; "("; e = expr; ")"; s1 = matched; ELSE; s2 = matched
-    { Printf.printf ("matched\n"); (If (e, s1, s2) |@| $loc ) }
-
-  | WHILE; "("; e = expr; ")"; b = matched
-    { (While (e, b) |@| $loc) }
-  
-  | DO; "{"; b = matched; "}"; WHILE; e = expr
-    { (Do (b,e) |@| $loc) }
-
-  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = matched
-    { (For (e1, e2, e3, b) |@| $loc) }
-;
-
-unmatched: 
-  | IF; "("; e = expr; ")"; s1 = stmt
-    { Printf.printf ("ifthen\n"); (IfThen (e, s1) |@| $loc ) }
-
-  | IF; "("; e = expr; ")"; s1 = matched; ELSE; s2 = unmatched 
-    { Printf.printf ("unmatched\n"); (If (e, s1, s2) |@| $loc ) }
-
-  | WHILE; "("; e = expr; ")"; b = unmatched
-    { (While (e, b) |@| $loc) }
-
-  | DO; "{"; b = unmatched; "}"; WHILE; e = expr
-    { (Do (b,e) |@| $loc) }
-
-  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = unmatched 
-    { (For (e1, e2, e3, b) |@| $loc) } 
-;
-
-simple_stmt:
   | RETURN; e = option(expr); ";"
     { (Return (e) |@| $loc) }
 
-  | e = expr 
+  | e = expr; ";"
     { (Expr (e) |@| $loc) }
+;
+
+selection_stmt:
+  | IF; "("; e = expr; ")"; s1 = stmt %prec NO_ELSE
+    { (If (e, s1, (Block [] |@| $loc)) |@| $loc ) }
+
+  | IF; "("; e = expr; ")"; s1 = stmt; ELSE; s2 = stmt
+    { (If (e, s1, s2) |@| $loc ) }
+;
+
+loop_stmt:
+  | WHILE; "("; e = expr; ")"; b = stmt
+    { (While (e, b) |@| $loc) }
+
+  | DO; "{"; b = stmt; "}"; WHILE; "("; e = expr; ")" 
+    { (While (e, b) |@| $loc) }
+
+  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = stmt
+    { (For (e1, e2, e3, b) |@| $loc) }
+  
+  | FOR; "("; ";"; e = expr; ";"; ")"; b = stmt
+    { (While (e, b) |@| $loc) }
 ;
 
 expr:
@@ -268,47 +256,48 @@ unary:
   | "-"; e = expr %prec UMINUS
     { UnaryOp(Neg, e) |@| $loc }
 
-  | "++"; e = expr
-    { UnaryOp (Incr, e) |@| $loc }
+  | INCR; e = expr
+    { 
+      let e2 = ( (BinaryOp (Add, (Access ((AccDeref(e)) |@| $loc) |@| $loc), ((ILiteral 1) |@| $loc))) |@| $loc )
+      in ( Assign ((AccDeref(e) |@| $loc), e2) |@| $loc ) 
+    }
   
-  | e = expr; "++"
-    { UnaryOp (Incr, e) |@| $loc }
+  | e = expr; INCR
+    { 
+      let e2 = ( (UnaryOp (Incr, (Access ((AccDeref(e)) |@| $loc) |@| $loc))) |@| $loc )
+      in ( Assign ((AccDeref(e) |@| $loc), e2) |@| $loc ) 
+    }
 
-  | "--"; e = expr
-    { UnaryOp (Decr, e) |@| $loc }
+  | DECR; e = expr
+    { 
+      let e2 = ( (BinaryOp(Sub, (Access ((AccDeref(e)) |@| $loc) |@| $loc), ((ILiteral 1) |@| $loc))) |@| $loc )
+      in (Assign((AccDeref(e) |@| $loc), e2) |@| $loc) 
+    }
   
-  | e = expr; "--"
-    { UnaryOp (Decr, e) |@| $loc }
+  | e = expr; DECR
+    { 
+      let e2 = ( (UnaryOp (Decr, (Access ((AccDeref(e)) |@| $loc) |@| $loc))) |@| $loc )
+      in ( Assign ((AccDeref(e) |@| $loc), e2) |@| $loc ) 
+    }
 ;
 
 binary:
-  | e1 = expr; b = mult_op; e2 = expr %prec TIMES
-    { BinaryOp(b, e1, e2) |@| $loc }
-    
-  | e1 = expr; b = add_op; e2 = expr %prec PLUS
-    { BinaryOp(b, e1, e2) |@| $loc }
-
-  | e1 = expr; b = boolean_op; e2 = expr %prec GREATER
+  | e1 = expr; b = op; e2 = expr
     { BinaryOp(b, e1, e2) |@| $loc }
 ;
 
-mult_op:
+%inline op:
+  | "+"
+    { Add }
+  | "-"
+    { Sub }
   | "*"
     { Mult }
   | "/"
     { Div }
   | "%"
     { Mod }
-;
 
-add_op:
-  | "+"
-    { Add }
-  | "-"
-    { Sub }
-;
-
-boolean_op:
   | "<" 
     { Less }
   | ">" 
@@ -322,7 +311,7 @@ boolean_op:
   | "!="
     { Neq }
   | "&&" 
-    { And_bit }
+    { And }
   | "||" 
-    { Or_bit }
+    { Or }
 ;

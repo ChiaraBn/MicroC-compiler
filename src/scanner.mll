@@ -40,19 +40,16 @@ let identifier = ('_' | letter) (letter | digit | '_')*
 
 rule token = parse
     | digit+ as inum        { 
-                              printf "integer: %s \n" inum;
                               let num = int_of_string inum in
 			                  LINT(num)
                             }
 
     | fdigit as fnum        { 
-                              printf "float: %s \n" fnum;
                               let num = float_of_string fnum in
                               LFLOAT(num) 
                             }
 
     | identifier as word    { 
-                              printf "id: %s \n" word;
                               try
                                Hashtbl.find keyword_table word
                               with Not_found ->
@@ -79,7 +76,7 @@ rule token = parse
     | '>'                   { GREATER }
     | "<="                  { LEQ }
     | ">="                  { GEQ }
-    | '='                   { printf "assign\n"; ASSIGN }
+    | '='                   { ASSIGN }
     | "=="                  { EQ }
     | "!="                  { NOTEQ }
     | '!'                   { NOT }
@@ -88,12 +85,12 @@ rule token = parse
     | ')'                   { RPAREN }
     | '['                   { LSQUAREPAREN }
     | ']'                   { RSQUAREPAREN }
-    | '{'                   { printf "{\n"; LBRACHPAREN }
-    | '}'                   { printf "}\n"; RBRACHPAREN }
-    | "&&"                  { printf "&&\n"; AND_BIT }
+    | '{'                   { LBRACHPAREN }
+    | '}'                   { RBRACHPAREN }
+    | "&&"                  { AND }
     | '&'                   { RIF }
-    | "||"                  { OR_BIT }
-    | ';'                   { printf ";\n"; SEMICOLON }
+    | "||"                  { OR }
+    | ';'                   { SEMICOLON }
     | ','                   { COMMA }
 
     | "/*"                  { print_endline "comments start"; comments 0 lexbuf }
@@ -126,9 +123,6 @@ and comments_one_line = parse
     | _                     { comments_one_line lexbuf }
 
 and literal_char = parse
-    | lit_char as lchar     { 
-                              printf "lit_char: %c \n" lchar; 
-                              LCHAR(lchar);
-                            }
+    | lit_char as lchar     { LCHAR(lchar); }
     | '\''                  { token lexbuf }
     | _                     { literal_char lexbuf }
