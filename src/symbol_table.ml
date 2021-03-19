@@ -1,14 +1,43 @@
 exception DuplicateEntry
+exception NotFoundEntry
 
-type 'a t = int (* TODO: this is a dummy definition *)
 
-let empty_table = failwith "Not implemented yet"
+module STable = Map.Make(String);;
 
-let begin_block table = failwith "Not implemented yet"
+type 'a t = ('a STable.t) list
 
-let end_block table = failwith "Not implemented yet"
+let empty_table = [ STable.empty ]
 
-let add_entry symbol info table = failwith "Not implemented yet"
+let begin_block table = (STable.empty)::table
 
-let rec lookup symbol table = failwith "Not implemented yet"
+let end_block table = 
+  match table with
+  | [] -> []
+  | x::xs -> xs
 
+(** symbol: string, info: map, table: list map *)
+let rec add_entry symbol info table = 
+  match table with 
+  | []    -> let e = empty_table in add_entry symbol info e
+
+  | x::xs -> (match (STable.find_opt symbol x) with
+              |None -> (STable.add symbol info x)::xs
+              |Some(x) -> raise DuplicateEntry
+             )
+
+(** symbol: string, table: list map *)
+let rec lookup symbol table = 
+  match table with
+  | []    -> raise NotFoundEntry
+  | x::xs -> (match (STable.find_opt symbol x) with
+              | None -> lookup symbol xs
+              | Some(x) -> x
+            )
+
+(** TODO Cancella anche in mli *)
+let rec print_elems (table :'a t) = 
+  match table with
+  | [] -> Printf.fprintf stderr "Fine tabella \n"
+  | x::xs ->  let t1 = STable.bindings x in
+              ignore( List.iter (fun (a,b) -> Printf.fprintf stderr "%s \n" a ) t1);
+            print_elems xs

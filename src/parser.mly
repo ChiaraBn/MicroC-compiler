@@ -9,8 +9,14 @@
 
     exception SyntaxError of string
 
-    (* Annotated node *)
-    let (|@|) node loc = { node = node; loc = loc };;
+    (** Mutable counter for the ids of the nodes *)
+    let counter = ref 0;;
+    let next_val = 
+      fun () -> counter := (!counter) + 1;
+        !counter;;
+
+    (** Annotated node *)
+    let (|@|) node loc = { node = node; loc = loc; id = next_val() };;
 %}
 
 /* Tokens declarations */

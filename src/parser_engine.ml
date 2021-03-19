@@ -1,7 +1,3 @@
-(**
-  Parser engine for the incremental API of Menhir.
- *)
-
 open Ast
 
 let parse lexbuf =

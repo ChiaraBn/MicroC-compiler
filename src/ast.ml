@@ -11,7 +11,7 @@ type identifier = string
 type position = Lexing.position * Lexing.position
 let dummy_pos = (Lexing.dummy_pos, Lexing.dummy_pos)
 
-type 'a annotated_node = { loc : position[@opaque]; node : 'a } (*; id : int } *)
+type 'a annotated_node = { loc : position[@opaque]; node : 'a; id : int }
 [@@deriving show]
 
 type typ =
@@ -22,6 +22,7 @@ type typ =
   | TypA of typ * int option         (** Array type                  *)
   | TypP of typ                      (** Pointer type                *)
   | TypV                             (** Type void                   *)
+  | TypFun of typ list * typ         (** Type function               *)
 [@@deriving show]
 
 and expr =  expr_node annotated_node
