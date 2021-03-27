@@ -1,11 +1,11 @@
 
-(** The error message produced if the main function signature is wrong. *)
+(** The error message produced if the main function signature is wrong *)
 let main_err = "Main function can only be of int or void type"
 
-(** The error message produced if the main function is not defined. *)
+(** The error message produced if the main function is not defined *)
 let no_main_err = "Main function missing"
 
-(** The error message produced if a variable is unbound. *)
+(** The error message produced if a variable is unbound *)
 let unbound_var_err = "Unbound variable"
 
 (** The error message produced if a variable is void type *)
@@ -21,31 +21,37 @@ let name_err = "Name not found"
 let element_decl_err = "Element already defined"
 
 (** The error message produced if the return value 
-    of a function is not correct.
+    of a function is not correct
  *)
 let return_fun_err = "Function cannot return Arrays or Pointers"
 
-(** The error message produced if there's a mismatch in the operators. *)
+(** The error message produced if there's a mismatch in the operators *)
 let arith_op_err = "Arithmetic operators expect only integer or float values"
 
-(** The error message produced if there's a mismatch in the operators. *)
+(** The error message produced if there's a mismatch in the operators *)
 let logic_op_err = "Logical operators expect only boolean values"
 
 (** The error message produced if there's an unknown operator *)
 let unknown_op_err = "The operator is not defined"
 
 (** The error message produced if the guard
-    of an [if] or [while] does not have type [bool]. *)
+    of an [if] or [while] does not have type [bool] *)
 let guard_err = "Guards must have type bool"
 
 (** The error message produced if there's an assignment between arrays*)
 let array_assign_err = "Array cannot be assigned"
 
+(** The error message produced if the access via indexes is not done over an array *)
+let array_index_err = "The operator is not an array"
+
+(** The error message produced if an array has not size at least 1 *)
+let size_array_err = "Array should have a size at least of 1"
+
+(** The error message produced when there's an access out of bound *)
+let bound_array_err = "Index out of bound"
+
 (** The error message produced if a coercion is tried *)
 let coercion_err = "Operations with different types are not supported"
-
-(** The error message produced when there's a mismatch with Literals *)
-let lit_err = "Element expected of type "
 
 (** The error message produced if an index of the array is not integer *)
 let index_err = "The index is not of type INT"

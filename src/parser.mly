@@ -54,7 +54,7 @@
 %left     AND
 %left     EQ NOTEQ
 %nonassoc GREATER LESS GEQ LEQ
-%left     PLUS MINUS INCR DECR 
+%left     PLUS MINUS 
 %left     TIMES DIV MODULE
 %right    UMINUS
 %nonassoc NOT RIF
@@ -107,7 +107,7 @@ var:
     { v }
 
   | t = types; id = ID; "["; "]"
-    { (TypA (t, Some(0)), id) }
+    { (TypA (t, Some(1)), id) }
 
   | t = types; id = ID; "["; a = LINT; "]"
     { (TypA (t, Some(a)), id) } 
@@ -214,21 +214,27 @@ primitive:
 ;
 
 lexpr:
-  | id = ID 
-    { (AccVar(id) |@| $loc ) }
+  | l = acc
+    { l }
 
   | "("; l = lexpr; ")"
     { l } 
 
   | "*"; l = lexpr 
     { l }
+;
 
+acc:
+  | id = ID 
+    { (AccVar(id) |@| $loc ) }
+  
   | "*"; a = primitive 
     { (AccDeref(a) |@| $loc ) }
 
   | l = lexpr; "["; e = expr; "]"
     { (AccIndex(l, e) |@| $loc ) }
 ;
+
 
 call:
   id = ID; "("; cont = separated_list(COMMA, expr); ")" 
@@ -253,6 +259,30 @@ assignment:
   
   | l = lexpr; ASSIGN_MODULE; e = expr %prec MODULE
     { Assign(l, BinaryOp(Mod, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
+
+  | INCR; l = acc
+    { 
+      let e = (BinaryOp (Add, (Access (l) |@| $loc), ((ILiteral 1) |@| $loc)) |@| $loc )
+      in (Assign (l, e) |@| $loc ) 
+    }
+
+  | l = acc; INCR
+    { 
+      let e = (UnaryOp (Incr, (Access (l) |@| $loc)) |@| $loc )
+      in (Assign (l, e) |@| $loc ) 
+    }
+
+  | DECR; l = acc
+    { 
+      let e = (BinaryOp (Sub, (Access (l) |@| $loc), ((ILiteral 1) |@| $loc)) |@| $loc )
+      in (Assign(l, e) |@| $loc) 
+    }
+  
+  | l = acc; DECR
+    { 
+      let e = (UnaryOp (Decr, (Access (l) |@| $loc)) |@| $loc )
+      in (Assign (l, e) |@| $loc ) 
+    }
 ;
 
 unary:
@@ -261,30 +291,6 @@ unary:
 
   | "-"; e = expr %prec UMINUS
     { UnaryOp(Neg, e) |@| $loc }
-
-  | INCR; e = expr
-    { 
-      let e2 = ( (BinaryOp (Add, (Access ((AccDeref(e)) |@| $loc) |@| $loc), ((ILiteral 1) |@| $loc))) |@| $loc )
-      in ( Assign ((AccDeref(e) |@| $loc), e2) |@| $loc ) 
-    }
-  
-  | e = expr; INCR
-    { 
-      let e2 = ( (UnaryOp (Incr, (Access ((AccDeref(e)) |@| $loc) |@| $loc))) |@| $loc )
-      in ( Assign ((AccDeref(e) |@| $loc), e2) |@| $loc ) 
-    }
-
-  | DECR; e = expr
-    { 
-      let e2 = ( (BinaryOp(Sub, (Access ((AccDeref(e)) |@| $loc) |@| $loc), ((ILiteral 1) |@| $loc))) |@| $loc )
-      in (Assign((AccDeref(e) |@| $loc), e2) |@| $loc) 
-    }
-  
-  | e = expr; DECR
-    { 
-      let e2 = ( (UnaryOp (Decr, (Access ((AccDeref(e)) |@| $loc) |@| $loc))) |@| $loc )
-      in ( Assign ((AccDeref(e) |@| $loc), e2) |@| $loc ) 
-    }
 ;
 
 binary:

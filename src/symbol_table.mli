@@ -12,6 +12,3 @@ val end_block : 'a t -> 'a t
 val add_entry : Ast.identifier -> 'a -> 'a t -> 'a t
 
 val lookup : Ast.identifier -> 'a t -> 'a
-
-(** TODO cancella *)
-val print_elems : 'a t -> unit
