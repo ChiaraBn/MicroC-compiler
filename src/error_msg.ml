@@ -47,9 +47,6 @@ let array_index_err = "The operator is not an array"
 (** The error message produced if an array has not size at least 1 *)
 let size_array_err = "Array should have a size at least of 1"
 
-(** The error message produced when there's an access out of bound *)
-let bound_array_err = "Index out of bound"
-
 (** The error message produced if a coercion is tried *)
 let coercion_err = "Operations with different types are not supported"
 
@@ -58,3 +55,7 @@ let index_err = "The index is not of type INT"
 
 (** The error message produced if the deference operator is not a pointer *)
 let pointer_err = "The operator is not a pointer"
+
+
+(** The error message produded during the initialization of a variable*)
+let codegen_vardec_err = "The variable cannot be initialized with this type"

@@ -16,7 +16,7 @@ type 'a t = ('a STable.t) list
 let empty_table = [ STable.empty ]
 
 (** Function that adds a new block to the table
-  @param table the initial table to be updated
+  @param table the initial table to update
 *)
 let begin_block table = (STable.empty)::table
 

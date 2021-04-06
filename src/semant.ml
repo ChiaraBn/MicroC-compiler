@@ -248,7 +248,7 @@ let rec check_expr (env: context) (e: expr) =
                 else Util.raise_semantic_error e.loc Error_msg.arith_op_err;
         )
 
-      | _           -> Util.raise_semantic_error e.loc Error_msg.unknown_op_err
+      | _          -> Util.raise_semantic_error e.loc Error_msg.unknown_op_err
     )
   | Call (id, lst)        -> (
       let tf = check_lookup id env e.loc Error_msg.name_err in
@@ -355,39 +355,39 @@ let rec check_stmt (env: context) (st: stmt) =
   @return (env, td), the changed environment and the declaration
 *)
 let check_topdecl (env: context) (td: topdecl) =
-    match td.node with
-    | Fundecl (fdec)    -> (
-      let ty = fdec.typ in 
-        match ty with 
-        | TypA (t,i)  -> Util.raise_semantic_error td.loc Error_msg.return_fun_err
-        | TypP (t)    -> Util.raise_semantic_error td.loc Error_msg.return_fun_err
-        | _           -> (
+  match td.node with
+  | Fundecl (fdec)    -> (
+    let ty = fdec.typ in 
+      match ty with 
+      | TypA (t,i)  -> Util.raise_semantic_error td.loc Error_msg.return_fun_err
+      | TypP (t)    -> Util.raise_semantic_error td.loc Error_msg.return_fun_err
+      | _           -> (
 
-          let env' = 
-            add_value fdec.fname ty env td.loc Error_msg.element_decl_err;
-          in 
-            let nblock = Symbol_table.begin_block env' in
-            let g = 
-              let rec add e lst =
-                match lst with
-                | []          -> e
-                | (t,i)::xs   -> 
-                    add (add_value i (check_void t td) e td.loc Error_msg.element_decl_err) xs
-              in add nblock fdec.formals
-            in
-              let fbody = check_stmt g fdec.body in
-              (env', {loc = td.loc; node = Fundecl ({typ = ty; 
-                                                    fname = fdec.fname; 
-                                                    formals = fdec.formals; 
-                                                    body = fbody
-                                          }); id = td.id })
-        )
-    )
-    | Vardec (ty, id)   -> ( 
-      let t = check_void ty td in 
-        let env' = add_value id ty env td.loc Error_msg.element_decl_err;
-        in (env', {loc = td.loc; node = Vardec(t, id); id = td.id })
+        let env' = 
+          add_value fdec.fname ty env td.loc Error_msg.element_decl_err;
+        in 
+          let nblock = Symbol_table.begin_block env' in
+          let g = 
+            let rec add e lst =
+              match lst with
+              | []          -> e
+              | (t,i)::xs   -> 
+                  add (add_value i (check_void t td) e td.loc Error_msg.element_decl_err) xs
+            in add nblock fdec.formals
+          in
+            let fbody = check_stmt g fdec.body in
+            (env', {loc = td.loc; node = Fundecl ({typ = ty; 
+                                                  fname = fdec.fname; 
+                                                  formals = fdec.formals; 
+                                                  body = fbody
+                                        }); id = td.id })
       )
+  )
+  | Vardec (ty, id)   -> ( 
+    let t = check_void ty td in 
+      let env' = add_value id ty env td.loc Error_msg.element_decl_err
+      in (env', {loc = td.loc; node = Vardec(t, id); id = td.id })
+    )
 
 (** This function is used in order to check the semantic of the main function
   @param env the environment

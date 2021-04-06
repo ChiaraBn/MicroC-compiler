@@ -57,4 +57,4 @@ let () =
   | Util.Syntax_error(m) ->
     Printf.fprintf stderr "Syntax error:\n%s:%s\n" !filename m; exit 2
   | Util.Semantic_error(m) ->
-    Printf.fprintf stderr "Error:\n%s:%s\n" !filename m; exit 3s
+    Printf.fprintf stderr "Error:\n%s:%s\n" !filename m; exit 3

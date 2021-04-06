@@ -32,9 +32,30 @@ Examples of expressions are12,12/3*45and12+3*45-6.
 ## PUNTO 2 - Analisi semantica
 - **semant.ml** per l'analisi semantica
 - **symbol table** per memorizzare i tipi delle variabili
+<p>
+
+## PUNTO 3 - Code Generation
+
+LLVM IR {
+    - codice a tre indirizzi
+    - valori tipati
+    - registri infiniti
+}
+
+opt_pass.ml -> file che implementa le possibili ottimizzazioni del codice creato con LLVM
+LLVM crea codice macchina non ottimizzato in quanto questo è compito delle fasi successive
+(quindi è possibile non implementarle a questo livello) <br>
+
+A questo punto dello sviluppo, si assume che i costrutti siano semanticamente corretti,
+quindi non vengono eseguiti **controlli** di tipo. <br>
+
+Viene usata la **tabella dei simboli** per tenere traccia dei tipi in maniera più semplice. <br>
+
+**inizializzazione**
+- valori primitivi al loro zero
+- booleani a false
+- array e puntatori alle struct vuote
 <br>
-
-
 
 <p>
 

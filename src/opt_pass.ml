@@ -1,5 +1,6 @@
 (**
-
+  The module that implements the various types of
+  possible optimizations
 *)
 
 module L = Llvm
