@@ -51,7 +51,6 @@ and stmt = stmt_node annotated_node
 and stmt_node =
   | If of expr * stmt * stmt         (** Conditional                    *)
   | While of expr * stmt             (** While loop                     *)
-  | For of expr * expr * expr * stmt (** For loop                       *)
   | Expr of expr                     (** Expression statement   e;      *)
   | Return of expr option            (** Return statement               *)
   | Block of stmtordec list          (** Block: grouping and scope      *)

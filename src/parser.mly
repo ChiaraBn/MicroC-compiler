@@ -158,8 +158,16 @@ loop_stmt:
   | DO; "{"; b = stmt; "}"; WHILE; "("; e = expr; ")" 
     { (While (e, b) |@| $loc) }
 
-  | FOR; "("; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = stmt
-    { (For (e1, e2, e3, b) |@| $loc) }
+  | FOR; "("; a1 = acc; ASSIGN; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = stmt
+    { 
+      let nb = (Block( [ (Stmt(b) |@| $loc); (Stmt(Expr(e3) |@| $loc) |@| $loc) ] ) |@| $loc)
+      in
+      (Block (
+          [
+            (Stmt(Expr(Assign(a1,e1) |@| $loc) |@| $loc) |@| $loc); 
+            (Stmt(While(e2, nb) |@| $loc) |@| $loc) 
+          ] ) |@| $loc) 
+    }
   
   | FOR; "("; ";"; e = expr; ";"; ")"; b = stmt
     { (While (e, b) |@| $loc) }

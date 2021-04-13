@@ -1,6 +1,6 @@
 (**
   The module that implements the overall semantic and
-  typing rules of the Microcc language.
+  typing rules of the MicroC language.
 *)
 
 open Ast
@@ -87,7 +87,7 @@ let rec custom_fold f acc y =
                   let (res, ys) = custom_fold f acc' xs in
                   (res, y::ys)
 
-(** Addition function that creates a node access
+(** Additional function that creates a node access
   @param acc the expression of type access
 *)
 let make_access (acc: access) =
@@ -288,22 +288,10 @@ let rec check_stmt (env: context) (st: stmt) =
   | While (ex, s)         -> (
     let ty = type_expr env ex in
       match ty with
-        | TypB    -> let c1 = check_stmt (Symbol_table.begin_block env) s in
-                      { loc = st.loc; node = While(ex, c1); id = st.id }
-        
-        | _       -> Util.raise_semantic_error st.loc Error_msg.guard_err
-    )
-  | For (e1, e2, e3, s)   -> (
-    let c1 = check_stmt (Symbol_table.begin_block env) s in
-        let ex1 = check_expr env e1 in 
-        let te2 = type_expr env e2 in
-          match te2 with
-          | TypB      -> ( 
-              let ex2 = check_expr env e2 in  
-                let ex3 = check_expr env e2 in
-              { loc = st.loc; node = For(ex1, ex2, ex3, c1); id = st.id }
-            )
-          | _         -> Util.raise_semantic_error st.loc Error_msg.guard_err
+      | TypB    -> let c1 = check_stmt (Symbol_table.begin_block env) s in
+                    { loc = st.loc; node = While(ex, c1); id = st.id }
+      
+      | _       -> Util.raise_semantic_error st.loc Error_msg.guard_err
     )
   | Expr (e)              -> (
     let e1 = check_expr env e in 
@@ -331,16 +319,15 @@ let rec check_stmt (env: context) (st: stmt) =
               if (check_size t) 
               then (
                 let env' = add_value id t env x.loc Error_msg.element_decl_err in
-                  let dec = { loc = st.loc; node = Dec(t, id); id = x.id } in 
-                    check_list xs env' (acc @ [dec])
+                let dec = { loc = st.loc; node = Dec(t, id); id = x.id } in 
+                  check_list xs env' (acc @ [dec])
               )
               else Util.raise_semantic_error st.loc Error_msg.size_array_err
             )
-
           | Stmt (s)       -> ( 
               let test = check_stmt env s in
-                let s' = { loc = st.loc; node = (Stmt test); id = x.id } in
-                  check_list xs env (acc @ [s'])
+              let s' = { loc = st.loc; node = (Stmt test); id = x.id } in
+                check_list xs env (acc @ [s'])
             )
         )
     in
@@ -379,8 +366,8 @@ let check_topdecl (env: context) (td: topdecl) =
             (env', {loc = td.loc; node = Fundecl ({typ = ty; 
                                                   fname = fdec.fname; 
                                                   formals = fdec.formals; 
-                                                  body = fbody
-                                        }); id = td.id })
+                                                  body = fbody}); 
+                                                  id = td.id })
       )
   )
   | Vardec (ty, id)   -> ( 

@@ -57,5 +57,5 @@ let index_err = "The index is not of type INT"
 let pointer_err = "The operator is not a pointer"
 
 
-(** The error message produded during the initialization of a variable*)
+(** The error message produced during the initialization of a variable*)
 let codegen_vardec_err = "The variable cannot be initialized with this type"

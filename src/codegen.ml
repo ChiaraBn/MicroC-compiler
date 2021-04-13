@@ -6,7 +6,6 @@
 open Ast
 open Symbol_table
 open Error_msg
-open Semant
 
 (** A shorthand for referring to Llvm module *)
 module L = Llvm
@@ -89,27 +88,178 @@ let add_params env params llparams builder =
   List.fold_left2 add_formal env params llparams
 
 (** 
-  @return block
+  @param builder
+  @param f
 *)
-let codegen_stmt fdec env builder stmt =
-  match stmt.node with
-  | If (ex, s1, s2)         -> (
-      let bcont = L.append_block llcontext "cont" fdec in 
-      L.builder_at_end llcontext bcont
-  )
-  | _       -> (
-      let bcont = L.append_block llcontext "cont" fdec in 
-      L.builder_at_end llcontext bcont
-  )
+let termination_stmt builder f = 
+  match L.block_terminator (L.insertion_block builder) with
+  | Some(i)   -> ()
+  | None      -> ignore(f builder)
 
-  (*
-  | If of expr * stmt * stmt         (** Conditional                    *)
-  | While of expr * stmt             (** While loop                     *)
-  | For of expr * expr * expr * stmt (** For loop                       *)
-  | Expr of expr                     (** Expression statement   e;      *)
-  | Return of expr option            (** Return statement               *)
-  | Block of stmtordec list          (** Block: grouping and scope      *)
+(** 
+  @return llvalue
+*)
+let build_op fi ff lv1 lv2 label builder = 
+  let t = L.type_of lv1 in
+  match t with 
+  | int_type    -> fi lv1 lv2 label builder
+  | float_type  -> ff lv1 lv2 label builder
+
+(** 
+  @param ex
+  @param env the environment of llvalues
+  @param builder
+  @return llvalue of the expression
+*)
+let rec codegen_expr ex env builder = 
+
+  (**
+    @return llvalue of the access
   *)
+  let rec codegen_access acc env = 
+    match acc.node with
+    | AccVar (id)         -> (
+      let lvalue = 
+        try Symbol_table.lookup id env
+        with NotFoundEntry -> Util.raise_semantic_error acc.loc Error_msg.name_err
+      in L.build_load lvalue id builder
+    )
+    | AccDeref (e)        -> codegen_expr e env builder        
+    | AccIndex (a, e)     -> codegen_access a env
+
+  in
+  match ex.node with
+  | ILiteral (i)          -> L.const_int int_type i
+  | FLiteral (f)          -> L.const_float float_type f
+  | CLiteral (c)          -> L.const_int char_type (Char.code c)
+  | BLiteral (b)          -> L.const_int bool_type (Bool.to_int b)
+  | NLiteral ()           -> L.const_int void_type 0
+  | Access (acc)          -> codegen_access acc env
+  | Assign (acc, e)       -> (
+      let lvalue = codegen_access acc env in
+      let lexpr = codegen_expr e env builder in
+      L.build_store lexpr lvalue builder
+  )
+  | Addr (acc)            -> codegen_access acc env
+  | UnaryOp (u, e)        -> (
+      let lexpr = codegen_expr e env builder in
+      match u with
+      | Neg   -> L.build_neg lexpr "neg" builder 
+      | Not   -> L.build_not lexpr "not" builder
+      | Incr 
+      | Decr  -> (
+          let t = L.type_of lexpr in
+          match t with
+          | int_type   -> (
+              if (u == Incr) 
+              then L.build_add lexpr (L.const_int int_type 1) "incr" builder
+              else L.build_sub lexpr (L.const_int int_type 1) "decr" builder
+          )
+          | float_type -> (
+              if (u == Incr) 
+              then L.build_sub lexpr (L.const_float float_type 1.0) "decr" builder
+              else L.build_fsub lexpr (L.const_float float_type 1.0) "decr" builder
+          )
+      )
+  )
+  | BinaryOp (b, e1, e2)  -> (
+      let le1 = codegen_expr e1 env builder in
+      let le2 = codegen_expr e2 env builder in
+      match b with
+      | Add       -> build_op (L.build_add) (L.build_fadd) le1 le2 "add" builder
+      | Sub       -> build_op (L.build_sub) (L.build_fsub) le1 le2 "sub" builder
+      | Mult      -> build_op (L.build_mul) (L.build_fmul) le1 le2 "mul" builder
+      | Div       -> build_op (L.build_sdiv) (L.build_fdiv) le1 le2 "div" builder
+      | Mod       -> build_op (L.build_srem) (L.build_frem) le1 le2 "mod" builder
+
+      | Equal     -> build_op (L.build_icmp L.Icmp.Eq)  (L.build_fcmp L.Fcmp.Oeq) le1 le2 "equal" builder
+      | Neq       -> build_op (L.build_icmp L.Icmp.Ne)  (L.build_fcmp L.Fcmp.One) le1 le2 "neq" builder
+      | Less      -> build_op (L.build_icmp L.Icmp.Slt) (L.build_fcmp L.Fcmp.Olt) le1 le2 "less" builder
+      | Leq       -> build_op (L.build_icmp L.Icmp.Sle) (L.build_fcmp L.Fcmp.Ole) le1 le2 "leq" builder
+      | Greater   -> build_op (L.build_icmp L.Icmp.Sgt) (L.build_fcmp L.Fcmp.Ogt) le1 le2 "greater" builder
+      | Geq       -> build_op (L.build_icmp L.Icmp.Sge) (L.build_fcmp L.Fcmp.Oge) le1 le2 "geq" builder
+      
+      | And       -> L.build_and le1 le2 "and" builder
+      | Or        -> L.build_or  le1 le2 "or" builder
+
+      | _         -> Util.raise_semantic_error ex.loc Error_msg.unknown_op_err
+  )
+  | Call (id, lst)        -> L.const_int int_type 0
+
+(** 
+  @param fdec
+  @param env the environment of llvalues
+  @param builder
+  @param st
+  @return builder
+*)
+let rec codegen_stmt fdec env builder st =
+  match st.node with
+  | If (ex, s1, s2)         -> (
+      let bthen = L.append_block llcontext "then" fdec in
+      let belse = L.append_block llcontext "else" fdec in
+      let bcont = L.append_block llcontext "cont" fdec in
+  
+      let bt = codegen_stmt fdec (Symbol_table.begin_block env) (L.builder_at_end llcontext bthen) s1 in
+      let bf = codegen_stmt fdec (Symbol_table.begin_block env) (L.builder_at_end llcontext belse) s2 in 
+      termination_stmt bt (L.build_br bcont) |> ignore;
+      termination_stmt bf (L.build_br bcont) |> ignore;
+
+      let code_ex = codegen_expr ex env builder in
+      L.build_cond_br code_ex bthen belse builder |> ignore;
+
+      L.builder_at_end llcontext bcont
+  )
+  | While (ex, s)           -> (
+      let bguard = L.append_block llcontext "while" fdec in
+      let bbody  = L.append_block llcontext "wbody" fdec in
+      let bcont  = L.append_block llcontext "cont" fdec in
+
+      L.build_br bguard builder |> ignore;
+
+      let bt = codegen_stmt fdec (Symbol_table.begin_block env) (L.builder_at_end llcontext bbody) s in
+      termination_stmt bt (L.build_br bguard) |> ignore;
+
+      let code_ex = codegen_expr ex env builder in
+      L.build_cond_br code_ex bbody bcont (L.builder_at_end llcontext bguard) |> ignore;
+      
+      L.builder_at_end llcontext bcont
+  )
+  | Expr (e)                -> let _ = codegen_expr e env builder in builder
+  | Return (e)              -> (
+      match e with
+      | Some (e)  -> (
+          let code_ex = codegen_expr e env builder in
+          termination_stmt builder (L.build_ret (code_ex)) |> ignore;
+          builder
+      )
+      | None      ->  (
+        termination_stmt builder (L.build_ret_void) |> ignore;
+        builder
+      )
+  )
+  | Block (lst)             -> (
+      let rec check_block lst env builder =
+        match lst with
+        | []      -> builder
+        | x::xs   -> (
+          match x.node with
+          | Dec (ty, id)    -> (
+            let lvalue = initialize_var ty in
+            let _ = L.set_value_name id lvalue in
+            let local = L.build_alloca (convert_type ty) id builder in
+            let env = Symbol_table.add_entry id local env in
+            L.build_store lvalue local builder |> ignore;
+            check_block xs env builder
+          )
+          | Stmt (s)        -> (
+            let b = codegen_stmt fdec env builder s in
+            check_block xs env b
+          )
+        )
+      in
+      check_block lst env builder
+  )
 
 (** 
   @param llvm_module
@@ -135,21 +285,16 @@ let rec codegen_topdec llvm_module env topdecls =
         let env' = 
           add_params (Symbol_table.begin_block env) fdec.formals (Array.to_list (L.params dec)) builder 
         in
-          let _ = codegen_stmt dec env' builder fdec.body in
-          
-          (* return value *)
-          let fret = 
-            match fdec.typ with
-              | TypV  -> L.build_ret_void
-              | _     -> L.build_ret (L.const_int int_type 0) 
-          in
-            let term = L.block_terminator (L.insertion_block builder) in 
-            match term with
-              | Some(i) -> codegen_topdec llvm_module env xs
-              | None    -> (
-                fret builder |> ignore;
-                codegen_topdec llvm_module env xs
-              )
+        let _ = codegen_stmt dec env' builder fdec.body in
+        
+        (* return value *)
+        let fret = 
+          match fdec.typ with
+            | TypV  -> L.build_ret_void
+            | _     -> L.build_ret (L.const_int int_type 0) 
+        in
+        termination_stmt builder fret |> ignore;
+        codegen_topdec llvm_module env xs
     )
     | Vardec (ty, id)   -> (
         let value =  L.define_global id (initialize_var ty) llvm_module in
