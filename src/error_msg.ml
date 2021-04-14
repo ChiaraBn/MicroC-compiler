@@ -5,6 +5,12 @@ let main_err = "Main function can only be of int or void type"
 (** The error message produced if the main function is not defined *)
 let no_main_err = "Main function missing"
 
+(** The error message produced if the main function has more than 1 parameter *)
+let main_param_err = "Main function can not have more than 1 parameter"
+
+(** The error message produced if the main function is not well defined *)
+let no_fun_err = "It is not a function"
+
 (** The error message produced if a variable is unbound *)
 let unbound_var_err = "Unbound variable"
 
@@ -24,6 +30,19 @@ let element_decl_err = "Element already defined"
     of a function is not correct
  *)
 let return_fun_err = "Function cannot return Arrays or Pointers"
+
+(** The error message produced if the return value 
+    of a function does not match the definition
+ *)
+let return_val_err = "Mismatch in the return statement"
+
+(** The error message produced if the return value is missing*)
+let return_miss_err = "The return value is missing"
+
+(** The error message produced if there's a mismatch
+    in the parameters of a function
+ *)
+let formal_fun_err = "Parameters do not match in the function"
 
 (** The error message produced if there's a mismatch in the operators *)
 let arith_op_err = "Arithmetic operators expect only integer or float values"

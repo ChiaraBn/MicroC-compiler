@@ -32,6 +32,9 @@ Examples of expressions are12,12/3*45and12+3*45-6.
 ## PUNTO 2 - Analisi semantica
 - **semant.ml** per l'analisi semantica
 - **symbol table** per memorizzare i tipi delle variabili
+
+- TypFun (t, id, tlst) usato per controllo semantico delle funzioni.<br>
+Cosi il confronto è sempre tra Ast.typ
 <p>
 
 ## PUNTO 3 - Code Generation

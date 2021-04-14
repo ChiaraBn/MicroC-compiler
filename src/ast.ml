@@ -15,51 +15,51 @@ type 'a annotated_node = { loc : position[@opaque]; node : 'a; id : int }
 [@@deriving show]
 
 type typ =
-  | TypI                             (** Type int                    *)
-  | TypF                             (** Type float                  *)
-  | TypB                             (** Type bool                   *)
-  | TypC                             (** Type char                   *)
-  | TypA of typ * int option         (** Array type                  *)
-  | TypP of typ                      (** Pointer type                *)
-  | TypV                             (** Type void                   *)
-  | TypFun of typ list * typ         (** Type function               *)
+  | TypI                                (** Type int                    *)
+  | TypF                                (** Type float                  *)
+  | TypB                                (** Type bool                   *)
+  | TypC                                (** Type char                   *)
+  | TypA of typ * int option            (** Array type                  *)
+  | TypP of typ                         (** Pointer type                *)
+  | TypV                                (** Type void                   *)
+  | TypFun of typ * string * typ list   (** Type function               *)
 [@@deriving show]
 
 and expr =  expr_node annotated_node
 and expr_node =
-  | Access of access                 (** x    or  *p    or  a[e]     *)
-  | Assign of access * expr          (** x=e  or  *p=e  or  a[e]=e   *)
-  | Addr of access                   (** &x   or  &*p   or  &a[e]    *)
-  | ILiteral of int                  (** Integer literal             *)
-  | FLiteral of float                (** Float literal               *)
-  | CLiteral of char                 (** Char literal                *)
-  | BLiteral of bool                 (** Bool literal                *)
-  | NLiteral of unit                 (** NULL literal                *)
-  | UnaryOp of uop * expr            (** Unary primitive operator    *)
-  | BinaryOp of binop * expr * expr  (** Binary primitive operator   *)
-  | Call of identifier * expr list   (** Function call f(...)        *)
+  | Access of access                    (** x    or  *p    or  a[e]     *)
+  | Assign of access * expr             (** x=e  or  *p=e  or  a[e]=e   *)
+  | Addr of access                      (** &x   or  &*p   or  &a[e]    *)
+  | ILiteral of int                     (** Integer literal             *)
+  | FLiteral of float                   (** Float literal               *)
+  | CLiteral of char                    (** Char literal                *)
+  | BLiteral of bool                    (** Bool literal                *)
+  | NLiteral of unit                    (** NULL literal                *)
+  | UnaryOp of uop * expr               (** Unary primitive operator    *)
+  | BinaryOp of binop * expr * expr     (** Binary primitive operator   *)
+  | Call of identifier * expr list      (** Function call f(...)        *)
 [@@deriving show]
 
 and access = access_node annotated_node
 and access_node =
-  | AccVar of identifier             (** Variable access        x    *)
-  | AccDeref of expr                 (** Pointer dereferencing  *p   *)
-  | AccIndex of access * expr        (** Array indexing         a[e] *)
+  | AccVar of identifier                (** Variable access        x    *)
+  | AccDeref of expr                    (** Pointer dereferencing  *p   *)
+  | AccIndex of access * expr           (** Array indexing         a[e] *)
 [@@deriving show]
 
 and stmt = stmt_node annotated_node
 and stmt_node =
-  | If of expr * stmt * stmt         (** Conditional                    *)
-  | While of expr * stmt             (** While loop                     *)
-  | Expr of expr                     (** Expression statement   e;      *)
-  | Return of expr option            (** Return statement               *)
-  | Block of stmtordec list          (** Block: grouping and scope      *)
+  | If of expr * stmt * stmt            (** Conditional                    *)
+  | While of expr * stmt                (** While loop                     *)
+  | Expr of expr                        (** Expression statement   e;      *)
+  | Return of expr option               (** Return statement               *)
+  | Block of stmtordec list             (** Block: grouping and scope      *)
 [@@deriving show]
 
 and stmtordec = stmtordec_node annotated_node
 and stmtordec_node =
-  | Dec of typ * identifier          (** Local variable declaration  *)
-  | Stmt of stmt                     (** A statement                 *)
+  | Dec of typ * identifier             (** Local variable declaration  *)
+  | Stmt of stmt                        (** A statement                 *)
 [@@deriving show]
 
 type fun_decl = {
