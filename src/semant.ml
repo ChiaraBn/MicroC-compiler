@@ -170,42 +170,6 @@ let rec type_expr (env: context) (ex: expr) =
   )
   | Call (id, lst)        -> check_lookup id env ex.loc Error_msg.name_err
 
-(** Additional function that checks the return value of a function
-  @param fdec the function declaration
-  @param fbody the function body
-  @param env the environment
-  @param td the top declaration
-  @param topd the return in case of success
-*)
-let rec check_return fdec fbody env td topd =
-  match fbody.node with
-  | Return (e)  -> (
-    match e with
-    | None    -> (
-      if fdec.typ == TypV
-      then topd
-      else Util.raise_semantic_error td.loc Error_msg.return_val_err
-    )
-    | Some(e) -> (
-      let te = type_expr env e in
-      if (te != fdec.typ)
-      then Util.raise_semantic_error td.loc Error_msg.return_val_err
-      else topd
-    )
-  )
-  | Block (lst) -> (  
-    match lst with
-    | []    -> Util.raise_semantic_error td.loc Error_msg.return_miss_err
-    | x::xs -> (
-      let n = (List.hd (List.rev lst))
-      in
-      match n.node with
-      | Stmt(s)     -> check_return fdec s env td topd
-      | _           -> Util.raise_semantic_error td.loc Error_msg.return_miss_err
-    )
-  )
-  | _           -> Util.raise_semantic_error td.loc Error_msg.return_miss_err
-
 (** This function is used in order to check the semantic of an expression
   @param env the environment
   @param e the expression to be checked
@@ -313,28 +277,29 @@ let rec check_expr (env: context) (e: expr) =
 (** This function is used in order to check the semantic of a statement
   @param env the environment
   @param st the statement to check
+  @param fdec the function declaration
   @return the statement checked
 *)
-let rec check_stmt (env: context) (st: stmt) =
+let rec check_stmt (env: context) (st: stmt) fdec =
   match st.node with 
   | If (ex, s1, s2)       -> (
     let ty = type_expr env ex in 
       match ty with 
       | TypB    -> (
-                  let c1 = check_stmt (Symbol_table.begin_block env) s1 in
-                    let c2 = check_stmt (Symbol_table.begin_block env) s2 in
-                    let ce = check_expr env ex in
-                    { loc = st.loc; node = If(ce, c1, c2); id = st.id }
-                  )
-
+        let c1 = check_stmt (Symbol_table.begin_block env) s1 fdec in
+        let c2 = check_stmt (Symbol_table.begin_block env) s2 fdec in
+        let ce = check_expr env ex in
+        { loc = st.loc; node = If(ce, c1, c2); id = st.id }
+      )
       | _       -> Util.raise_semantic_error st.loc Error_msg.guard_err
   )
   | While (ex, s)         -> (
     let ty = type_expr env ex in
       match ty with
-      | TypB    -> let c1 = check_stmt (Symbol_table.begin_block env) s in
-                    { loc = st.loc; node = While(ex, c1); id = st.id }
-      
+      | TypB    -> (
+          let c1 = check_stmt (Symbol_table.begin_block env) s fdec in
+          { loc = st.loc; node = While(ex, c1); id = st.id }
+      )
       | _       -> Util.raise_semantic_error st.loc Error_msg.guard_err
     )
   | Expr (e)              -> (
@@ -343,14 +308,23 @@ let rec check_stmt (env: context) (st: stmt) =
   )
   | Return (e)            -> (
     match e with
-      | None       -> { loc = st.loc; node = Return(None); id = st.id }
-      | Some (e1)  -> let ce1 = check_expr env e1 in 
-                    { loc = st.loc; node = Return(Some(ce1)); id = st.id }
+    | None       -> (
+        if (fdec.typ == TypV)
+        then { loc = st.loc; node = Return(None); id = st.id }
+        else Util.raise_semantic_error st.loc Error_msg.return_val_err
+    )
+    | Some (e1)  -> (
+        let ce1 = check_expr env e1 in 
+        let te1 = type_expr env e1 in
+        if (te1 != fdec.typ) 
+        then Util.raise_semantic_error st.loc Error_msg.return_val_err
+        else { loc = st.loc; node = Return(Some(ce1)); id = st.id }
+    )
   )
   | Block (lstd)          -> (
     let rec check_list (lst: stmtordec list) (env: context) (acc: stmtordec list) = 
       match lst with
-      | []      -> []
+      | []      -> acc
       | x::xs   -> (
           match x.node with
           | Dec (ty, id)   -> (
@@ -369,7 +343,7 @@ let rec check_stmt (env: context) (st: stmt) =
               else Util.raise_semantic_error st.loc Error_msg.size_array_err
             )
           | Stmt (s)       -> ( 
-              let test = check_stmt env s in
+              let test = check_stmt env s fdec in
               let s' = { loc = st.loc; node = (Stmt test); id = x.id } in
                 check_list xs env (acc @ [s'])
             )
@@ -393,7 +367,7 @@ let check_topdecl (env: context) (td: topdecl) =
       | TypP (t)    -> Util.raise_semantic_error td.loc Error_msg.return_fun_err
       | _           -> (
         let tf = TypFun (fdec.typ, fdec.fname, (List.map (fun (a,b) -> a) fdec.formals)) in
-        let env' = Symbol_table.add_entry fdec.fname tf env in 
+        let env' = add_value fdec.fname tf env td.loc Error_msg.element_decl_err in 
         let nblock = Symbol_table.begin_block env' in
         let g = 
           let rec add e lst =
@@ -403,13 +377,11 @@ let check_topdecl (env: context) (td: topdecl) =
                 add (add_value i (check_void t td) e td.loc Error_msg.element_decl_err) xs
           in add nblock fdec.formals
         in
-        let fbody = check_stmt g fdec.body in
-        let topd = (env', {loc = td.loc; node = Fundecl ({typ = fdec.typ; 
+        let fbody = check_stmt g fdec.body fdec in
+        (env', {loc = td.loc; node = Fundecl ({typ = fdec.typ; 
                                               fname = fdec.fname; 
                                               formals = fdec.formals; 
                                               body = fbody}); id = td.id })
-        in
-        check_return fdec fbody env td topd
     )
   )
   | Vardec (ty, id)   -> ( 
