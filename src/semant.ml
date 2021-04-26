@@ -168,7 +168,12 @@ let rec type_expr (env: context) (ex: expr) =
         )
       | _        -> Util.raise_semantic_error ex.loc Error_msg.unknown_op_err
   )
-  | Call (id, lst)        -> check_lookup id env ex.loc Error_msg.name_err
+  | Call (id, lst)        -> (
+      let f = check_lookup id env ex.loc Error_msg.name_err in
+      match f with
+      | TypFun (t, id, lst) -> t
+      | _                   -> Util.raise_semantic_error ex.loc Error_msg.no_fun_err
+  )
 
 (** This function is used in order to check the semantic of an expression
   @param env the environment
