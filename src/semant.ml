@@ -257,24 +257,45 @@ let rec check_expr (env: context) (e: expr) =
       | _          -> Util.raise_semantic_error e.loc Error_msg.unknown_op_err
   )
   | Call (id, lst)        -> (
-      let f = check_lookup id env e.loc Error_msg.name_err in
-
-      let rec check_list (lst: expr list) (env: context) (acc: expr list) = 
+      let rec check_list (lst: expr list) (tlst: typ list) 
+                         (env: context) (acc: expr list) = 
         match lst with
-        | []      -> acc
-        | x::xs   -> (
+        | []        -> acc
+        | x::xs     -> (
             let dex = check_expr env x in
-            check_list xs env (acc @ [dex])
+            let tex = type_expr env x in 
+
+            match List.hd tlst with
+            | TypA(ta, _)   -> (
+                match tex with
+                | TypA(te,_)    -> (
+                    if (ta != te) 
+                    then Util.raise_semantic_error e.loc Error_msg.formal_fun_err
+                    else check_list xs (List.tl tlst) env (acc @ [dex])
+                )
+                | _               -> Util.raise_semantic_error e.loc Error_msg.formal_fun_err
+              )
+            | TypP(tp)      -> (
+                if (tp != tex) 
+                then Util.raise_semantic_error e.loc Error_msg.formal_fun_err
+                else check_list xs (List.tl tlst) env (acc @ [dex])
+            )
+            | _             -> (
+                if (tex != List.hd tlst)
+                then Util.raise_semantic_error e.loc Error_msg.formal_fun_err
+                else check_list xs (List.tl tlst) env (acc @ [dex])
+            )
         )
       in
+      let f = check_lookup id env e.loc Error_msg.name_err in
       match f with
       | TypFun (t, id, tlst)  -> (
-          if (tlst = (List.map (fun (e) -> type_expr env e) lst))
-          then (
-            let clist = check_list lst env [] in
-            { loc = e.loc; node = Call (id, clist); id = e.id }
-          )
-          else Util.raise_semantic_error e.loc Error_msg.formal_fun_err
+           if (List.length (lst) = List.length (tlst))
+           then (
+             let clist = check_list lst tlst env [] in
+             { loc = e.loc; node = Call (id, clist); id = e.id }
+           ) 
+           else Util.raise_semantic_error e.loc Error_msg.formal_fun_err
       )
       | _                     -> Util.raise_semantic_error e.loc Error_msg.no_fun_err
   )
