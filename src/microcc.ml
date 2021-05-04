@@ -32,14 +32,14 @@ let () =
       end
     else
       begin
-        Semant.check p;
+        let cp = Semant.check p in
         if !action = Semantic_check then
           begin
             Printf.printf "Semantic checks: pass\n"
           end
         else
           begin
-            let llvm_module = Codegen.to_ir p in
+            let llvm_module = Codegen.to_ir cp in
             (if !optimize then
                Opt_pass.optimize_module llvm_module |> ignore
             );

@@ -348,7 +348,8 @@ let rec check_stmt (env: context) (st: stmt) fdec =
     )
   )
   | Block (lstd)          -> (
-    let rec check_list (lst: stmtordec list) (env: context) (acc: stmtordec list) = 
+    let rec check_list (lst: stmtordec list) (env: context) 
+                       (acc: stmtordec list) (flag: bool) = 
       match lst with
       | []      -> acc
       | x::xs   -> (
@@ -364,18 +365,31 @@ let rec check_stmt (env: context) (st: stmt) fdec =
               then (
                 let env' = add_value id t env x.loc Error_msg.element_decl_err in
                 let dec = { loc = st.loc; node = Dec(t, id); id = x.id } in 
-                  check_list xs env' (acc @ [dec])
+                
+                if (flag)
+                then check_list xs env' (acc) flag
+                else check_list xs env' (acc @ [dec]) flag
               )
               else Util.raise_semantic_error st.loc Error_msg.size_array_err
             )
           | Stmt (s)       -> ( 
               let test = check_stmt env s fdec in
               let s' = { loc = st.loc; node = (Stmt test); id = x.id } in
-                check_list xs env (acc @ [s'])
+
+              if (flag)
+              then (
+                Printf.fprintf stderr "Code unreachable \n";
+                check_list xs env (acc) flag
+              )
+              else (
+                match s.node with
+                | Return (_)  -> check_list xs env (acc @ [s']) true
+                | _           -> check_list xs env (acc @ [s']) flag
+              )
             )
         )
     in
-      let clst = check_list lstd (Symbol_table.begin_block env) [] in
+      let clst = check_list lstd (Symbol_table.begin_block env) [] false in
       { loc = st.loc; node = Block(clst); id = st.id }
   )
 
@@ -441,4 +455,6 @@ let check_main (env: context) =
 let check (Prog(topdecls)) =  
   let initial_env = initialize in
     let (final_env, topd) = 
-      custom_fold (fun x y -> (check_topdecl x y)) initial_env topdecls in check_main final_env;
+      custom_fold (fun x y -> (check_topdecl x y)) initial_env topdecls in 
+      check_main final_env;
+    Prog(topd)
