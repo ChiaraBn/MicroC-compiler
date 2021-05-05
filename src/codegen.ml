@@ -142,19 +142,24 @@ let rec codegen_expr ex env builder =
   let rec codegen_access acc env = 
     match acc.node with
     | AccVar (id)         -> (
-        try Symbol_table.lookup id env
-        with NotFoundEntry -> failwith Error_msg.name_err
+      try Symbol_table.lookup id env
+      with NotFoundEntry -> failwith Error_msg.name_err
     )
     | AccDeref (e)        -> (
-        let lvalue = codegen_expr e env builder in
-        L.build_gep lvalue [| L.const_int int_type 0 |] "ptr" builder
+        let lexpr = codegen_expr e env builder in
+        L.build_gep lexpr [| L.const_int int_type 0 |] "ptr" builder
     )   
     | AccIndex (a, e)     -> (
-        let lvalue = codegen_access a env in
-        let lexpr = codegen_expr e env builder in
-        L.build_gep lvalue [| L.const_int int_type 0; lexpr |] "idx" builder
+        let l = codegen_access a env in
+        let lvalue = if(L.classify_type (L.element_type (L.type_of l)) = Array) 
+          then l
+          else L.build_load l "tmp" builder 
+        in
+        let le = codegen_expr e env builder in
+        if(L.classify_type (L.element_type (L.type_of lvalue)) = Array)
+          then L.build_gep lvalue [| L.const_int int_type 0 ; le |] "tmp" builder
+          else L.build_gep lvalue [| le |] "tmp" builder 
     )
-
   in
   match ex.node with
   | ILiteral (i)          -> L.const_int int_type i
@@ -162,13 +167,18 @@ let rec codegen_expr ex env builder =
   | CLiteral (c)          -> L.const_int char_type (Char.code c)
   | BLiteral (b)          -> L.const_int bool_type (Bool.to_int b)
   | NLiteral ()           -> L.const_int void_type 0
-  | Access (acc)          -> L.build_load (codegen_access acc env) "tmp" builder
+  | Access (acc)          -> (
+      let lvalue = codegen_access acc env in
+      if (L.classify_type (L.element_type (L.type_of lvalue)) = Array) 
+      then L.build_struct_gep lvalue 0 "tmp" builder
+      else L.build_load lvalue "tmp" builder
+  ) 
   | Assign (acc, e)       -> (
       let lvalue = codegen_access acc env in
-      let lexpr = codegen_expr e env builder in
-      L.build_store lexpr lvalue builder
+      let le = codegen_expr e env builder in
+      L.build_store le lvalue builder
   )
-  | Addr (acc)            -> codegen_access acc env
+  | Addr (acc)            ->codegen_access acc env
   | UnaryOp (u, e)        -> (
       let lexpr = codegen_expr e env builder in
       match u with
@@ -221,8 +231,7 @@ let rec codegen_expr ex env builder =
           with NotFoundEntry -> failwith Error_msg.name_err
         in
         let vlst = gen_call lst env [] in
-        match L.type_of lvalue with
-        | void_type   -> L.build_call lvalue (Array.of_list (vlst)) "" builder
+        L.build_call lvalue (Array.of_list (vlst)) "" builder
       )
   )
 
@@ -267,14 +276,14 @@ let rec codegen_stmt fdec env builder st =
   | Expr (e)                -> let _ = codegen_expr e env builder in builder
   | Return (e)              -> (
       match e with
-      | Some (e)  -> (
-          let code_ex = codegen_expr e env builder in
+      | Some (e1)  -> (
+          let code_ex = codegen_expr e1 env builder in
           termination_stmt builder (L.build_ret (code_ex)) |> ignore;
           builder
       )
       | None      ->  (
-        termination_stmt builder (L.build_ret_void) |> ignore;
-        builder
+          termination_stmt builder (L.build_ret_void) |> ignore;
+          builder
       )
   )
   | Block (lst)             -> (
@@ -333,9 +342,7 @@ let rec codegen_stmt fdec env builder st =
 *)
 let rec codegen_topdec env topdecls =
   match topdecls with
-  | []      -> ( Symbol_table.print_elems env |> ignore;
-      llmodule
-  )
+  | []      -> llmodule
   | x::xs   -> (
     match x.node with
     | Fundecl (fdec)    -> (
@@ -357,7 +364,7 @@ let rec codegen_topdec env topdecls =
         let fret = 
           match fdec.typ with
             | TypV  -> L.build_ret_void
-            | _     -> L.build_ret (L.const_int int_type 0) 
+            | _     -> L.build_ret (initialize_var fdec.typ) 
         in
         termination_stmt builder' fret |> ignore;
         codegen_topdec env xs
