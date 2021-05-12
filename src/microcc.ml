@@ -1,5 +1,7 @@
 (**
-
+ The entry point for the MicroC compiler.
+ It allows to create the executable in addition to various
+ options for the compilation.
 *)
 
 type action = Dump_ast | Semantic_check | Dump_llvm_ir | Compile

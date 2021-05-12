@@ -57,8 +57,7 @@
 %left     PLUS MINUS 
 %left     TIMES DIV MODULE
 %right    UMINUS
-%nonassoc NOT RIF
-%nonassoc LSQUAREPAREN 
+%nonassoc NOT
 
 /* Starting symbol */
 %start program
@@ -158,7 +157,7 @@ loop_stmt:
   | DO; "{"; b = stmt; "}"; WHILE; "("; e = expr; ")" 
     { (While (e, b) |@| $loc) }
 
-  | FOR; "("; a1 = acc; ASSIGN; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = stmt
+  | FOR; "("; a1 = lexpr; ASSIGN; e1 = expr; ";"; e2 = expr; ";"; e3 = expr; ")"; b = stmt
     { 
       let nb = (Block( [ (Stmt(b) |@| $loc); (Stmt(Expr(e3) |@| $loc) |@| $loc) ] ) |@| $loc)
       in
@@ -222,27 +221,15 @@ primitive:
 ;
 
 lexpr:
-  | l = acc
-    { l }
-
-  | "("; l = lexpr; ")"
-    { l } 
-
-  | "*"; l = lexpr 
-    { l }
-;
-
-acc:
   | id = ID 
     { (AccVar(id) |@| $loc ) }
   
-  | "*"; a = primitive 
-    { (AccDeref(a) |@| $loc ) }
+  | "*"; l = lexpr
+    { (AccDeref(Access(l) |@| $loc) |@| $loc ) }
 
-  | l = lexpr; "["; e = expr; "]"
-    { (AccIndex(l, e) |@| $loc ) }
+  | id = ID; "["; e = expr; "]"
+    { (AccIndex((AccVar(id)|@| $loc), e) |@| $loc ) }
 ;
-
 
 call:
   id = ID; "("; cont = separated_list(COMMA, expr); ")" 
@@ -268,25 +255,25 @@ assignment:
   | l = lexpr; ASSIGN_MODULE; e = expr %prec MODULE
     { Assign(l, BinaryOp(Mod, (Access(l)|@| $loc), e)|@| $loc ) |@| $loc }
 
-  | INCR; l = acc
+  | INCR; l = lexpr
     { 
       let e = (BinaryOp (Add, (Access (l) |@| $loc), ((ILiteral 1) |@| $loc)) |@| $loc )
       in (Assign (l, e) |@| $loc ) 
     }
 
-  | l = acc; INCR
+  | l = lexpr; INCR
     { 
       let e = (UnaryOp (Incr, (Access (l) |@| $loc)) |@| $loc )
       in (Assign (l, e) |@| $loc ) 
     }
 
-  | DECR; l = acc
+  | DECR; l = lexpr
     { 
       let e = (BinaryOp (Sub, (Access (l) |@| $loc), ((ILiteral 1) |@| $loc)) |@| $loc )
       in (Assign(l, e) |@| $loc) 
     }
   
-  | l = acc; DECR
+  | l = lexpr; DECR
     { 
       let e = (UnaryOp (Decr, (Access (l) |@| $loc)) |@| $loc )
       in (Assign (l, e) |@| $loc ) 
