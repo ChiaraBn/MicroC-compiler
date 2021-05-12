@@ -48,6 +48,7 @@ Inside the top level folder: <br>
 |  /doc        | The folder for the Ocamldoc files                |
 | Makefile     | The Makefile for the compilation of the program  |
 | README.md    | File for the overall documentation               |
+| MicroC.pdf   | Final PDF report for the project                 |
 <br>
 
 Inside the **src** folder: <br>
