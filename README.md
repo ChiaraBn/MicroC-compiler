@@ -2,82 +2,67 @@
 
 ## Final project: compiler for MicroC
 
+The main goal of the Languages, Compilers and Interpreters' course was to analyze and study the behaviour of a generic compiler, in order to achieve the realization of an ad hoc compiler for a subset language of C: **MicroC**.
+
+### Building the project
+
+Firstly, it is necessary to have the environment updated
+```
 eval $(opam config env)
+``` 
 
-ocamldoc
+To create the **executable**
+```
+make
+``` 
+This command creats the **microc.native** executable that can be lauched with different options: <br>
+``` 
+-p file.mc  - Create and print the AST
+-s file.mc  - Perform semantic checks
+-d file.mc  - Print the generated code
+-o out.txt  - Place the output into a file
+-0          - Optimize the generated code
+-c file.mc  - Compile (default)
+``` 
+To link the external libraries
+``` 
+make ext
+```
+Ultimately, to compile and run the file:
+```
+make run f=file.mc
+```
+To clean the folder from the genered files
+```
+make clean
+```
 
-## Elementi di teoria da mettere nel report
 
-## PUNTO 1 - front end - menhir
- - **menhir** - an LR(1) parser generator for OCaml 
+### Structure of the files
+Inside the top level folder: <br>
 
- - A **reduce/reduce** conflict occurs if there are two or more rules that apply to the same sequence of input.
- - A **shift-reduce** conflict occurs in a state that requests both a shift action and a reduce action.
-
-    The way that **precedence** works to resolve shift/reduce conflicts is that it compares the precedence of the rule to be reduced with the precedence of the token to be shifted.
-
-- **Shift**
-    Accept the basic symbol as the corresponding terminal, push a new state onto the stack, and examine the next basic symbol.
-
-- **Reduce**
-    Note that a specific phrase has been recognized, remove a number of states equal to the number of symbols in the sequence of the corresponding production from the stack, push a new state onto the stack, and examine the current basic symbol again. 
-
-- **factor** generates  expressions that cannot be  “pulled apart,”  that is,  a  factor is either a single operand or any parenthesized expression.
-- **term** generates a product or quotient of factors.<br> A single factor is a term, and thusis a sequence of factors separated by the operators*or/.  
-- **Expression** generates a sum or difference of one or more terms. A single term isan expression, and thus is a sequence of terms separated by the operators+or-.<br>
-Examples of expressions are12,12/3*45and12+3*45-6.
-
-<p>
-
-## PUNTO 2 - Analisi semantica
-- **semant.ml** per l'analisi semantica
-- **symbol table** per memorizzare i tipi delle variabili
-
-- TypFun (t, id, tlst) usato per controllo semantico delle funzioni.<br>
-Cosi il confronto è sempre tra Ast.typ
-<p>
-
-## PUNTO 3 - Code Generation
-
-LLVM IR {
-    - codice a tre indirizzi
-    - valori tipati
-    - registri infiniti
-}
-
-opt_pass.ml -> file che implementa le possibili ottimizzazioni del codice creato con LLVM
-LLVM crea codice macchina non ottimizzato in quanto questo è compito delle fasi successive
-(quindi è possibile non implementarle a questo livello) <br>
-
-A questo punto dello sviluppo, si assume che i costrutti siano semanticamente corretti,
-quindi non vengono eseguiti **controlli** di tipo. <br>
-
-Viene usata la **tabella dei simboli** per tenere traccia dei tipi in maniera più semplice. <br>
-
-**inizializzazione**
-- valori primitivi al loro zero
-- booleani a false
-- array e puntatori alle struct vuote
+| File         | Description                                      |
+| -----------  | -----------                                      |
+|  /src        | The folder for the source files                  |
+|  /test       | The folder for the various tests for the program |
+|  /doc        | The folder for the Ocamldoc files                |
+| Makefile     | The Makefile for the compilation of the program  |
+| README.md    | File for the overall documentation               |
 <br>
 
-<p>
-
-
-## PUNTO 4 
-(scegline quattro)
-
-    --> do-while loops;
-
-    --> pre/post increment/decrement operators, i.e., ++ and --;
-
-    --> abbreviation for assignment operators, i.e., +=, -=, *=, /= and %=;
-
-    --> floating point arithmetic;
-    - stessi operandi aritmetici delle operazioni intere
-    - accetta rappresentazione exp
-    
-
-    variable declaration with initialization, e.g., int i = 0;
-    multi-dimensional arrays;
-    strings as in C, i.e. null-terminated arrays of characters;
-    structs.
+Inside the **src** folder: <br>
+| File         | Description                                      |
+| -----------  | -----------                                      |
+| microcc.ml   | The file from which build the executable         |
+| ast.ml       | The AST structure                                |
+| scanner.mll  | Ocamllex specification of the scanner            |
+| parser.ml    | Menhir specification of the grammar              | 
+| parser_engine.ml | The module that interacts with the parser    |          
+| semant.ml | Module that implements the semantic checker         |           
+| codegen.ml | Module that implements the code generation         |            
+| opt_pass.ml  | Module that implements some simple optimizations |             
+| symbol_table.mli | Interface of a polymorphic symbol table data type |          
+| symbol_table.ml | Implementation of a polymorphic symbol table data type |
+| util.ml | contains some utily functions                         |               
+| error_msg.ml | The strings representing the semantic errors     |           
+| rt-support.c | The run-time support to be linked to bitcode files|
