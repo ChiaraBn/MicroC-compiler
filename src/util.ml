@@ -1,3 +1,5 @@
+(** The module representing the utility functions *)
+
 exception Syntax_error of string
 exception Lexing_error of string
 exception Semantic_error of string

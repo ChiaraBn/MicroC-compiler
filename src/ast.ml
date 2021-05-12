@@ -1,3 +1,5 @@
+(** The module representing the AST of the program *)
+
 type binop = Add | Sub | Mult | Div  | Mod | Equal | Neq | Less | Leq |
              Greater | Geq | And | Or | Comma
 [@@deriving show]

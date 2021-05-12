@@ -1,3 +1,5 @@
+(** The module that interacts with the parser *)
+
 open Ast
 
 let parse lexbuf =

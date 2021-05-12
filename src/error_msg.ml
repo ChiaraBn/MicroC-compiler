@@ -1,3 +1,4 @@
+(** The additional file for the strings representing the semantic errors *)
 
 (** The error message produced if the main function signature is wrong *)
 let main_err = "Main function can only be of int or void type"
