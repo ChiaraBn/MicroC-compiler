@@ -36,6 +36,7 @@ let get_decl =
   L.declare_function "getint" getint_t llmodule
 
 (** Additional function that converts Ast types into LLVM types
+  @param ty The AST type to convert
   @return lltype
 *)
 let rec convert_type (ty: typ) =
@@ -50,6 +51,8 @@ let rec convert_type (ty: typ) =
   | TypFun (t, id, lst) -> convert_type t
 
 (** 
+  Additional function that initializes the variables
+  @param ty The AST type of the variable to initialize
   @return llvalue
 *)
 let rec initialize_var (ty: typ) =
@@ -105,7 +108,8 @@ let primitive_operators =
   ; (bool_type, Or),      (L.build_or, "or")
   ]
     
-(** 
+(** Additional function that adds the parameter of a function
+    inside its environment
   @param env the environment of llvalues
   @param params the list of parameters
   @param llparams the llvalue of the parameters
@@ -119,7 +123,7 @@ let add_params env params llparams builder =
   Symbol_table.add_entry name single_p e in
   List.fold_left2 add_formal env params llparams
 
-(** 
+(** Additional function that adds a terminator to the builder
   @param builder
   @param f
 *)
@@ -128,37 +132,39 @@ let termination_stmt builder f =
   | Some(i)   -> ()
   | None      -> ignore(f builder)
 
-(** 
-  @param ex
+(** This will be used for the code generation for the expressions
   @param env the environment of llvalues
   @param builder
+  @param ex The expression
   @return llvalue of the expression
 *)
 let rec codegen_expr ex env builder = 
 
-  (**
+  (** Additional function that manages the variables as pointers,
+      arrays or simple ones.
+    @param acc The AST access to define
+    @param env The environment of llvalues
     @return llvalue of the access
   *)
   let rec codegen_access acc env = 
     match acc.node with
-    | AccVar (id)         -> (
-      try Symbol_table.lookup id env
-      with NotFoundEntry -> failwith Error_msg.name_err
+    | AccVar (id)       -> (
+        try Symbol_table.lookup id env
+        with NotFoundEntry -> failwith Error_msg.name_err
     )
-    | AccDeref (e)        -> (
-        let lexpr = codegen_expr e env builder in
-        L.build_gep lexpr [| L.const_int int_type 0 |] "ptr" builder
-    )   
-    | AccIndex (a, e)     -> (
-        let l = codegen_access a env in
-        let lvalue = if(L.classify_type (L.element_type (L.type_of l)) = Array) 
-          then l
-          else L.build_load l "tmp" builder 
-        in
+    | AccDeref (e)      -> (
         let le = codegen_expr e env builder in
-        if(L.classify_type (L.element_type (L.type_of lvalue)) = Array)
-          then L.build_gep lvalue [| L.const_int int_type 0 ; le |] "tmp" builder
-          else L.build_gep lvalue [| le |] "tmp" builder 
+        L.build_gep le [| L.const_int int_type 0 |] "ptr" builder
+    )   
+    | AccIndex (a, e)   -> (
+        let le = codegen_expr e env builder in
+        let la = codegen_access a env in
+        if(L.classify_type (L.element_type (L.type_of la)) = Array)
+        then L.build_gep la [| L.const_int int_type 0 ; le |] "idx" builder
+        else (
+          let idx = L.build_load la "idx" builder in
+          L.build_gep idx [| le |] "idx" builder 
+        )
     )
   in
   match ex.node with
@@ -169,16 +175,18 @@ let rec codegen_expr ex env builder =
   | NLiteral ()           -> L.const_int void_type 0
   | Access (acc)          -> (
       let lvalue = codegen_access acc env in
-      if (L.classify_type (L.element_type (L.type_of lvalue)) = Array) 
-      then L.build_struct_gep lvalue 0 "tmp" builder
-      else L.build_load lvalue "tmp" builder
+      let ctype = L.classify_type (L.element_type (L.type_of lvalue)) in
+
+      if (ctype = Array)
+      then L.build_struct_gep lvalue 0 "acc" builder
+      else L.build_load lvalue "acc" builder
   ) 
   | Assign (acc, e)       -> (
       let lvalue = codegen_access acc env in
       let le = codegen_expr e env builder in
       L.build_store le lvalue builder
   )
-  | Addr (acc)            ->codegen_access acc env
+  | Addr (acc)            -> codegen_access acc env
   | UnaryOp (u, e)        -> (
       let lexpr = codegen_expr e env builder in
       match u with
@@ -208,7 +216,7 @@ let rec codegen_expr ex env builder =
         | None    -> failwith Error_msg.name_err
         | Some(f) -> (
           let le = codegen_expr (List.hd (lst)) env builder in
-          L.build_call f (Array.of_list ([] @ [le])) "" builder
+          L.build_call f (Array.of_list ([le])) "" builder
         )
       )
       | "getint"  -> (
@@ -222,8 +230,16 @@ let rec codegen_expr ex env builder =
         match lst with
         | []      -> acc
         | x::xs   -> (
-            let lexpr = codegen_expr x env builder in
-            gen_call xs env (acc @ [lexpr])
+            match x.node with
+            | Assign (_, ex) -> (
+                ignore (codegen_expr x env builder);
+                let lexpr = codegen_expr ex env builder in
+                gen_call xs env (acc @ [lexpr])
+            )
+            | _               -> (
+                let lexpr = codegen_expr x env builder in
+                gen_call xs env (acc @ [lexpr])
+            )
         )
         in
         let lvalue =
@@ -235,11 +251,12 @@ let rec codegen_expr ex env builder =
       )
   )
 
-(** 
-  @param fdec
-  @param env the environment of llvalues
+(** This function is responsable for the code generation of
+    the statements
+  @param fdec The function definition
+  @param env The environment of llvalues
   @param builder
-  @param st
+  @param st The statement to generate
   @return builder
 *)
 let rec codegen_stmt fdec env builder st =
@@ -335,9 +352,10 @@ let rec codegen_stmt fdec env builder st =
       check_block lst env builder
   )
 
-(** 
+(** This function is responsable for the code generation 
+    of the top declarations
   @param env the environment of llvalues
-  @param topdecls
+  @param topdecls The list of top declarations
   @return llmodule
 *)
 let rec codegen_topdec env topdecls =
@@ -370,13 +388,25 @@ let rec codegen_topdec env topdecls =
         codegen_topdec env xs
     )
     | Vardec (ty, id)   -> (
-        let value =  L.define_global id (initialize_var ty) llmodule in
-        let env = Symbol_table.add_entry id value env in
-        codegen_topdec env xs
+        match ty with
+        | TypP (_)    -> (
+            let ptr = L.const_pointer_null (convert_type ty) in
+            let value = L.define_global id ptr llmodule in
+            let env = Symbol_table.add_entry id value env in
+            codegen_topdec env xs
+        )
+        | _           -> (
+            let value =  L.define_global id (initialize_var ty) llmodule in
+            let env = Symbol_table.add_entry id value env in
+            codegen_topdec env xs
+        )
     )
   )
 
-(** 
+(** Entry point for the code generation, it inserts the two
+    library functions' definition inside the environment and
+    then it starts the generation from the top declarations
+  @param Prog(topdecls) the AST program
   @return llmodule the entire generated module
 *)
 let to_ir (Prog(topdecls)) =

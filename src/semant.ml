@@ -120,12 +120,7 @@ let rec type_expr (env: context) (ex: expr) =
     )
     | AccDeref (e)        -> (
         match e.node with
-        | Access(a) -> (
-            let ta = type_access a env in
-              match ta with
-              | TypP(t)     -> t
-              | _           -> Util.raise_semantic_error acc.loc Error_msg.pointer_err
-          )
+        | Access(a) -> type_access a env
         | _         -> Util.raise_semantic_error acc.loc Error_msg.pointer_err
     ) 
     | AccIndex (a, e)     -> (
@@ -156,13 +151,13 @@ let rec type_expr (env: context) (ex: expr) =
       match b with
       | Add | Sub | Mult | Div  
       | Mod      -> (
-        let t1 = type_expr env e1 in 
+          let t1 = type_expr env e1 in 
           let t2 = type_expr env e2 in 
             check_type t1 t2 ex t1
         )
       | Equal | Neq | Less | Leq | Greater | Geq | And
       | Or       -> (
-        let t1 = type_expr env e1 in 
+          let t1 = type_expr env e1 in 
           let t2 = type_expr env e2 in 
             check_type t1 t2 ex TypB
         )
@@ -184,20 +179,20 @@ let rec check_expr (env: context) (e: expr) =
   match e.node with 
   | Access (acc)          -> (
       let _ta = type_expr env e in
-        let ma = make_access acc in
-        { loc = e.loc; node = Access(ma); id = e.id }
+      let ma = make_access acc in
+      { loc = e.loc; node = Access(ma); id = e.id }
   )
   | Assign (acc, ex)      -> (
       let ta = type_expr env e in
-        let te = type_expr env ex in
-          let ma = make_access acc in
-          let ret = { loc = e.loc; node = Assign(ma, ex); id = e.id } in
-          check_type ta te e ret
+      let te = type_expr env ex in
+      let ma = make_access acc in
+      let ret = { loc = e.loc; node = Assign(ma, ex); id = e.id } in
+      check_type ta te e ret
   )
   | Addr (acc)            -> (
       let _ta = type_expr env e in
-        let ma = make_access acc in
-          { loc = e.loc; node = Addr(ma); id = e.id }
+      let ma = make_access acc in
+      { loc = e.loc; node = Addr(ma); id = e.id }
   )
   | ILiteral (i)          -> { loc = e.loc; node = ILiteral(i); id = e.id }
   | FLiteral (f)          -> { loc = e.loc; node = FLiteral(f); id = e.id }
@@ -216,9 +211,9 @@ let rec check_expr (env: context) (e: expr) =
       | Decr
       | Neg       -> (
           let t = type_expr env e1 in
-            if (t == TypI || t == TypF)
-              then { loc = e.loc; node = UnaryOp(u, e1); id = e.id }
-              else Util.raise_semantic_error e.loc Error_msg.arith_op_err;
+          if (t == TypI || t == TypF)
+            then { loc = e.loc; node = UnaryOp(u, e1); id = e.id }
+            else Util.raise_semantic_error e.loc Error_msg.arith_op_err;
         )
   )
   | BinaryOp (b, e1, e2)  -> (
@@ -226,32 +221,32 @@ let rec check_expr (env: context) (e: expr) =
       | And 
       | Or          -> (
           let t1 = type_expr env e1 in
-            let t2 = type_expr env e2 in
-            if (t1 != t2)
-              then Util.raise_semantic_error e.loc Error_msg.coercion_err
-              else if (t1 == TypB)
-                then { loc = e.loc; node = BinaryOp(b, e1, e2); id = e.id }
-                else Util.raise_semantic_error e.loc Error_msg.logic_op_err;
+          let t2 = type_expr env e2 in
+          if (t1 != t2)
+            then Util.raise_semantic_error e.loc Error_msg.coercion_err
+            else if (t1 == TypB)
+              then { loc = e.loc; node = BinaryOp(b, e1, e2); id = e.id }
+              else Util.raise_semantic_error e.loc Error_msg.logic_op_err;
         )
       | Equal
       | Neq        -> (
           let t1 = type_expr env e1 in
-            let t2 = type_expr env e2 in
-            if (t1 != t2)
-              then Util.raise_semantic_error e.loc Error_msg.coercion_err
-              else if (t1 == TypB || t1 == TypF || t1 == TypI)
-                then { loc = e.loc; node = BinaryOp(b, e1, e2); id = e.id }
-                else Util.raise_semantic_error e.loc Error_msg.logic_op_err;
+          let t2 = type_expr env e2 in
+          if (t1 != t2)
+            then Util.raise_semantic_error e.loc Error_msg.coercion_err
+            else if (t1 == TypB || t1 == TypF || t1 == TypI)
+              then { loc = e.loc; node = BinaryOp(b, e1, e2); id = e.id }
+              else Util.raise_semantic_error e.loc Error_msg.logic_op_err;
         )
       | Add | Sub | Mult | Div | Mod | Less | Leq | Greater
       | Geq        -> (
           let t1 = type_expr env e1 in
-            let t2 = type_expr env e2 in
-            if (t1 != t2)
-              then Util.raise_semantic_error e.loc Error_msg.coercion_err
-              else if (t1 == TypI || t1 == TypF)
-                then { loc = e.loc; node = BinaryOp(b, e1, e2); id = e.id }
-                else Util.raise_semantic_error e.loc Error_msg.arith_op_err;
+          let t2 = type_expr env e2 in
+          if (t1 != t2)
+            then Util.raise_semantic_error e.loc Error_msg.coercion_err
+            else if (t1 == TypI || t1 == TypF)
+              then { loc = e.loc; node = BinaryOp(b, e1, e2); id = e.id }
+              else Util.raise_semantic_error e.loc Error_msg.arith_op_err;
         )
 
       | _          -> Util.raise_semantic_error e.loc Error_msg.unknown_op_err
@@ -425,7 +420,7 @@ let check_topdecl (env: context) (td: topdecl) =
     )
   )
   | Vardec (ty, id)   -> ( 
-    let t = check_void ty td in 
+      let t = check_void ty td in 
       let env' = add_value id ty env td.loc Error_msg.element_decl_err
       in (env', {loc = td.loc; node = Vardec(t, id); id = td.id })
     )
@@ -454,7 +449,7 @@ let check_main (env: context) =
 *)
 let check (Prog(topdecls)) =  
   let initial_env = initialize in
-    let (final_env, topd) = 
-      custom_fold (fun x y -> (check_topdecl x y)) initial_env topdecls in 
-      check_main final_env;
-    Prog(topd)
+  let (final_env, topd) = 
+    custom_fold (fun x y -> (check_topdecl x y)) initial_env topdecls in 
+    check_main final_env;
+  Prog(topd)
