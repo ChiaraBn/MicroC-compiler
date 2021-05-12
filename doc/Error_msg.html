@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Scanner.html">
+<link rel="next" href="Util.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="Scanner" rel="Chapter" href="Scanner.html">
+<link title="Error_msg" rel="Chapter" href="Error_msg.html">
+<link title="Util" rel="Chapter" href="Util.html">
+<link title="Symbol_table" rel="Chapter" href="Symbol_table.html">
+<link title="Semant" rel="Chapter" href="Semant.html">
+<link title="Parser_engine" rel="Chapter" href="Parser_engine.html">
+<link title="Parser" rel="Chapter" href="Parser.html"><title>Error_msg</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Scanner.html" title="Scanner">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Util.html" title="Util">Next</a>
+</div>
+<h1>Module <a href="type_Error_msg.html">Error_msg</a></h1>
+
+<pre><span id="MODULEError_msg"><span class="keyword">module</span> Error_msg</span>: <code class="code">sig</code> <a href="Error_msg.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<div class="info-desc">
+<p>The additional file for the strings representing the semantic errors</p>
+</div>
+</div>
+<hr width="100%">
+
+<pre><span id="VALmain_err"><span class="keyword">val</span> main_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the main function signature is wrong</p>
+</div>
+</div>
+
+<pre><span id="VALno_main_err"><span class="keyword">val</span> no_main_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the main function is not defined</p>
+</div>
+</div>
+
+<pre><span id="VALmain_param_err"><span class="keyword">val</span> main_param_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the main function has more than 1 parameter</p>
+</div>
+</div>
+
+<pre><span id="VALno_fun_err"><span class="keyword">val</span> no_fun_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the main function is not well defined</p>
+</div>
+</div>
+
+<pre><span id="VALunbound_var_err"><span class="keyword">val</span> unbound_var_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if a variable is unbound</p>
+</div>
+</div>
+
+<pre><span id="VALvariable_void_err"><span class="keyword">val</span> variable_void_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if a variable is void type</p>
+</div>
+</div>
+
+<pre><span id="VALtype_err"><span class="keyword">val</span> type_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if there's a mismatch in the type definitions</p>
+</div>
+</div>
+
+<pre><span id="VALname_err"><span class="keyword">val</span> name_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if a symbol is not found</p>
+</div>
+</div>
+
+<pre><span id="VALelement_decl_err"><span class="keyword">val</span> element_decl_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if a component has already been declared</p>
+</div>
+</div>
+
+<pre><span id="VALreturn_fun_err"><span class="keyword">val</span> return_fun_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the return value 
+    of a function is not correct</p>
+</div>
+</div>
+
+<pre><span id="VALreturn_val_err"><span class="keyword">val</span> return_val_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the return value 
+    of a function does not match the definition</p>
+</div>
+</div>
+
+<pre><span id="VALreturn_miss_err"><span class="keyword">val</span> return_miss_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the return value is missing</p>
+</div>
+</div>
+
+<pre><span id="VALformal_fun_err"><span class="keyword">val</span> formal_fun_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if there's a mismatch
+    in the parameters of a function</p>
+</div>
+</div>
+
+<pre><span id="VALarith_op_err"><span class="keyword">val</span> arith_op_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if there's a mismatch in the operators</p>
+</div>
+</div>
+
+<pre><span id="VALlogic_op_err"><span class="keyword">val</span> logic_op_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if there's a mismatch in the operators</p>
+</div>
+</div>
+
+<pre><span id="VALunknown_op_err"><span class="keyword">val</span> unknown_op_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if there's an unknown operator</p>
+</div>
+</div>
+
+<pre><span id="VALguard_err"><span class="keyword">val</span> guard_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the guard
+    of an <code class="code">if</code> or <code class="code">while</code> does not have type <code class="code">bool</code></p>
+</div>
+</div>
+
+<pre><span id="VALarray_assign_err"><span class="keyword">val</span> array_assign_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if there's an assignment between arrays</p>
+</div>
+</div>
+
+<pre><span id="VALarray_index_err"><span class="keyword">val</span> array_index_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the access via indexes is not done over an array</p>
+</div>
+</div>
+
+<pre><span id="VALsize_array_err"><span class="keyword">val</span> size_array_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if an array has not size at least 1</p>
+</div>
+</div>
+
+<pre><span id="VALcoercion_err"><span class="keyword">val</span> coercion_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if a coercion is tried</p>
+</div>
+</div>
+
+<pre><span id="VALindex_err"><span class="keyword">val</span> index_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if an index of the array is not integer</p>
+</div>
+</div>
+
+<pre><span id="VALpointer_err"><span class="keyword">val</span> pointer_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced if the deference operator is not a pointer</p>
+</div>
+</div>
+
+<pre><span id="VALcodegen_vardec_err"><span class="keyword">val</span> codegen_vardec_err</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The error message produced during the initialization of a variable</p>
+</div>
+</div>
+</body></html>

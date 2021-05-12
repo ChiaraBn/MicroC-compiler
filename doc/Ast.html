@@ -1,0 +1,647 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="next" href="Scanner.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="Scanner" rel="Chapter" href="Scanner.html">
+<link title="Error_msg" rel="Chapter" href="Error_msg.html">
+<link title="Util" rel="Chapter" href="Util.html">
+<link title="Symbol_table" rel="Chapter" href="Symbol_table.html">
+<link title="Semant" rel="Chapter" href="Semant.html">
+<link title="Parser_engine" rel="Chapter" href="Parser_engine.html">
+<link title="Parser" rel="Chapter" href="Parser.html"><title>Ast</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Scanner.html" title="Scanner">Next</a>
+</div>
+<h1>Module <a href="type_Ast.html">Ast</a></h1>
+
+<pre><span id="MODULEAst"><span class="keyword">module</span> Ast</span>: <code class="code">sig</code> <a href="Ast.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<div class="info-desc">
+<p>The module representing the AST of the program</p>
+</div>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEbinop"><span class="keyword">type</span> <code class="type"></code>binop</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Add"><span class="constructor">Add</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Sub"><span class="constructor">Sub</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Mult"><span class="constructor">Mult</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Div"><span class="constructor">Div</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Mod"><span class="constructor">Mod</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Equal"><span class="constructor">Equal</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Neq"><span class="constructor">Neq</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Less"><span class="constructor">Less</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Leq"><span class="constructor">Leq</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Greater"><span class="constructor">Greater</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Geq"><span class="constructor">Geq</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.And"><span class="constructor">And</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Or"><span class="constructor">Or</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbinop.Comma"><span class="constructor">Comma</span></span></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEuop"><span class="keyword">type</span> <code class="type"></code>uop</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTuop.Neg"><span class="constructor">Neg</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTuop.Not"><span class="constructor">Not</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTuop.Incr"><span class="constructor">Incr</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTuop.Decr"><span class="constructor">Decr</span></span></code></td>
+
+</tr></table>
+
+
+
+<pre><span id="TYPEidentifier"><span class="keyword">type</span> <code class="type"></code>identifier</span> = <code class="type">string</code> </pre>
+
+
+<pre><span id="TYPEposition"><span class="keyword">type</span> <code class="type"></code>position</span> = <code class="type">Stdlib.Lexing.position * Stdlib.Lexing.position</code> </pre>
+
+
+<pre><span id="VALdummy_pos"><span class="keyword">val</span> dummy_pos</span> : <code class="type">Stdlib.Lexing.position * Stdlib.Lexing.position</code></pre>
+<pre><code><span id="TYPEannotated_node"><span class="keyword">type</span> <code class="type">'a</code> annotated_node</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTannotated_node.loc">loc</span>&nbsp;: <code class="type"><a href="Ast.html#TYPEposition">position</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTannotated_node.node">node</span>&nbsp;: <code class="type">'a</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTannotated_node.id">id</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><code><span id="TYPEtyp"><span class="keyword">type</span> <code class="type"></code>typ</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtyp.TypI"><span class="constructor">TypI</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Type int</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtyp.TypF"><span class="constructor">TypF</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Type float</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtyp.TypB"><span class="constructor">TypB</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Type bool</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtyp.TypC"><span class="constructor">TypC</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Type char</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtyp.TypA"><span class="constructor">TypA</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEtyp">typ</a> * int option</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Array type</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtyp.TypP"><span class="constructor">TypP</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEtyp">typ</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Pointer type</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtyp.TypV"><span class="constructor">TypV</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Type void</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtyp.TypFun"><span class="constructor">TypFun</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEtyp">typ</a> * string * <a href="Ast.html#TYPEtyp">typ</a> list</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Type function</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><span id="TYPEexpr"><span class="keyword">type</span> <code class="type"></code>expr</span> = <code class="type"><a href="Ast.html#TYPEexpr_node">expr_node</a> <a href="Ast.html#TYPEannotated_node">annotated_node</a></code> </pre>
+
+
+<pre><code><span id="TYPEexpr_node"><span class="keyword">type</span> <code class="type"></code>expr_node</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.Access"><span class="constructor">Access</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEaccess">access</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>x    or  *p    or  a<code class="code">e</code></p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.Assign"><span class="constructor">Assign</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEaccess">access</a> * <a href="Ast.html#TYPEexpr">expr</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>x=e  or  *p=e  or  a<code class="code">e</code>=e</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.Addr"><span class="constructor">Addr</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEaccess">access</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>&amp;x   or  &amp;*p   or  &amp;a<code class="code">e</code></p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.ILiteral"><span class="constructor">ILiteral</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Integer literal</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.FLiteral"><span class="constructor">FLiteral</span></span> <span class="keyword">of</span> <code class="type">float</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Float literal</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.CLiteral"><span class="constructor">CLiteral</span></span> <span class="keyword">of</span> <code class="type">char</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Char literal</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.BLiteral"><span class="constructor">BLiteral</span></span> <span class="keyword">of</span> <code class="type">bool</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Bool literal</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.NLiteral"><span class="constructor">NLiteral</span></span> <span class="keyword">of</span> <code class="type">unit</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>NULL literal</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.UnaryOp"><span class="constructor">UnaryOp</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEuop">uop</a> * <a href="Ast.html#TYPEexpr">expr</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Unary primitive operator</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.BinaryOp"><span class="constructor">BinaryOp</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEbinop">binop</a> * <a href="Ast.html#TYPEexpr">expr</a> * <a href="Ast.html#TYPEexpr">expr</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Binary primitive operator</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr_node.Call"><span class="constructor">Call</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEidentifier">identifier</a> * <a href="Ast.html#TYPEexpr">expr</a> list</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Function call f(...)</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><span id="TYPEaccess"><span class="keyword">type</span> <code class="type"></code>access</span> = <code class="type"><a href="Ast.html#TYPEaccess_node">access_node</a> <a href="Ast.html#TYPEannotated_node">annotated_node</a></code> </pre>
+
+
+<pre><code><span id="TYPEaccess_node"><span class="keyword">type</span> <code class="type"></code>access_node</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTaccess_node.AccVar"><span class="constructor">AccVar</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEidentifier">identifier</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Variable access        x</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTaccess_node.AccDeref"><span class="constructor">AccDeref</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEexpr">expr</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Pointer dereferencing  *p</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTaccess_node.AccIndex"><span class="constructor">AccIndex</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEaccess">access</a> * <a href="Ast.html#TYPEexpr">expr</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Array indexing         a<code class="code">e</code></p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><span id="TYPEstmt"><span class="keyword">type</span> <code class="type"></code>stmt</span> = <code class="type"><a href="Ast.html#TYPEstmt_node">stmt_node</a> <a href="Ast.html#TYPEannotated_node">annotated_node</a></code> </pre>
+
+
+<pre><code><span id="TYPEstmt_node"><span class="keyword">type</span> <code class="type"></code>stmt_node</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstmt_node.If"><span class="constructor">If</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEexpr">expr</a> * <a href="Ast.html#TYPEstmt">stmt</a> * <a href="Ast.html#TYPEstmt">stmt</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Conditional</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstmt_node.While"><span class="constructor">While</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEexpr">expr</a> * <a href="Ast.html#TYPEstmt">stmt</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>While loop</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstmt_node.Expr"><span class="constructor">Expr</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEexpr">expr</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Expression statement   e;</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstmt_node.Return"><span class="constructor">Return</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEexpr">expr</a> option</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Return statement</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstmt_node.Block"><span class="constructor">Block</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEstmtordec">stmtordec</a> list</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Block: grouping and scope</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><span id="TYPEstmtordec"><span class="keyword">type</span> <code class="type"></code>stmtordec</span> = <code class="type"><a href="Ast.html#TYPEstmtordec_node">stmtordec_node</a> <a href="Ast.html#TYPEannotated_node">annotated_node</a></code> </pre>
+
+
+<pre><code><span id="TYPEstmtordec_node"><span class="keyword">type</span> <code class="type"></code>stmtordec_node</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstmtordec_node.Dec"><span class="constructor">Dec</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEtyp">typ</a> * <a href="Ast.html#TYPEidentifier">identifier</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Local variable declaration</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstmtordec_node.Stmt"><span class="constructor">Stmt</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEstmt">stmt</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>A statement</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><code><span id="TYPEfun_decl"><span class="keyword">type</span> <code class="type"></code>fun_decl</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfun_decl.typ">typ</span>&nbsp;: <code class="type"><a href="Ast.html#TYPEtyp">typ</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfun_decl.fname">fname</span>&nbsp;: <code class="type">string</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfun_decl.formals">formals</span>&nbsp;: <code class="type">(<a href="Ast.html#TYPEtyp">typ</a> * <a href="Ast.html#TYPEidentifier">identifier</a>) list</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfun_decl.body">body</span>&nbsp;: <code class="type"><a href="Ast.html#TYPEstmt">stmt</a></code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="TYPEtopdecl"><span class="keyword">type</span> <code class="type"></code>topdecl</span> = <code class="type"><a href="Ast.html#TYPEtopdecl_node">topdecl_node</a> <a href="Ast.html#TYPEannotated_node">annotated_node</a></code> </pre>
+
+
+<pre><code><span id="TYPEtopdecl_node"><span class="keyword">type</span> <code class="type"></code>topdecl_node</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtopdecl_node.Fundecl"><span class="constructor">Fundecl</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEfun_decl">fun_decl</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtopdecl_node.Vardec"><span class="constructor">Vardec</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEtyp">typ</a> * <a href="Ast.html#TYPEidentifier">identifier</a></code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEprogram"><span class="keyword">type</span> <code class="type"></code>program</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTprogram.Prog"><span class="constructor">Prog</span></span> <span class="keyword">of</span> <code class="type"><a href="Ast.html#TYPEtopdecl">topdecl</a> list</code></code></td>
+
+</tr></table>
+
+
+</body></html>

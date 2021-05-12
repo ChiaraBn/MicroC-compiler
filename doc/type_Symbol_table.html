@@ -1,0 +1,30 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="Scanner" rel="Chapter" href="Scanner.html">
+<link title="Error_msg" rel="Chapter" href="Error_msg.html">
+<link title="Util" rel="Chapter" href="Util.html">
+<link title="Symbol_table" rel="Chapter" href="Symbol_table.html">
+<link title="Semant" rel="Chapter" href="Semant.html">
+<link title="Parser_engine" rel="Chapter" href="Parser_engine.html">
+<link title="Parser" rel="Chapter" href="Parser.html"><title>Symbol_table</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">exception</span>&nbsp;<span class="constructor">DuplicateEntry</span><br>
+&nbsp;&nbsp;<span class="keyword">exception</span>&nbsp;<span class="constructor">NotFoundEntry</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;empty_table&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Symbol_table</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;begin_block&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Symbol_table</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Symbol_table</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;end_block&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Symbol_table</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Symbol_table</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_entry&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Ast</span>.identifier&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Symbol_table</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Symbol_table</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;lookup&nbsp;:&nbsp;<span class="constructor">Ast</span>.identifier&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Symbol_table</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a<br>
+<span class="keyword">end</span></code></body></html>

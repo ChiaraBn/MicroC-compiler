@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Symbol_table.html">
+<link rel="next" href="Parser_engine.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="Scanner" rel="Chapter" href="Scanner.html">
+<link title="Error_msg" rel="Chapter" href="Error_msg.html">
+<link title="Util" rel="Chapter" href="Util.html">
+<link title="Symbol_table" rel="Chapter" href="Symbol_table.html">
+<link title="Semant" rel="Chapter" href="Semant.html">
+<link title="Parser_engine" rel="Chapter" href="Parser_engine.html">
+<link title="Parser" rel="Chapter" href="Parser.html"><title>Semant</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Symbol_table.html" title="Symbol_table">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Parser_engine.html" title="Parser_engine">Next</a>
+</div>
+<h1>Module <a href="type_Semant.html">Semant</a></h1>
+
+<pre><span id="MODULESemant"><span class="keyword">module</span> Semant</span>: <code class="code">sig</code> <a href="Semant.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<div class="info-desc">
+<p>The module that implements the overall semantic and
+  typing rules of the MicroC language.</p>
+</div>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEcontext"><span class="keyword">type</span> <code class="type"></code>context</span> = <code class="type"><a href="Ast.html#TYPEtyp">Ast.typ</a> <a href="Symbol_table.html#TYPEt">Symbol_table.t</a></code> </pre>
+
+
+<pre><span id="VALadd_value"><span class="keyword">val</span> add_value</span> : <code class="type"><a href="Ast.html#TYPEidentifier">Ast.identifier</a> -><br>       <a href="Ast.html#TYPEtyp">Ast.typ</a> -> <a href="Semant.html#TYPEcontext">context</a> -> <a href="Ast.html#TYPEposition">Ast.position</a> -> string -> <a href="Ast.html#TYPEtyp">Ast.typ</a> <a href="Symbol_table.html#TYPEt">Symbol_table.t</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Additional function that inserts new values into the symbol table</p>
+</div>
+<ul class="info-attributes">
+<li><b>Returns</b> the new environment</li>
+</ul>
+</div>
+
+<pre><span id="VALcheck_lookup"><span class="keyword">val</span> check_lookup</span> : <code class="type"><a href="Ast.html#TYPEidentifier">Ast.identifier</a> -> <a href="Semant.html#TYPEcontext">context</a> -> <a href="Ast.html#TYPEposition">Ast.position</a> -> string -> <a href="Ast.html#TYPEtyp">Ast.typ</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Additional function that searches for a value in the symbol table</p>
+</div>
+<ul class="info-attributes">
+<li><b>Returns</b> the found value</li>
+</ul>
+</div>
+
+<pre><span id="VALcheck_void"><span class="keyword">val</span> check_void</span> : <code class="type"><a href="Ast.html#TYPEtyp">Ast.typ</a> -> 'a <a href="Ast.html#TYPEannotated_node">Ast.annotated_node</a> -> <a href="Ast.html#TYPEtyp">Ast.typ</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Additional function that raises an error if the type of the symbol is void</p>
+</div>
+<ul class="info-attributes">
+<li><b>Returns</b> the type of the symbol</li>
+</ul>
+</div>
+<div class="param_info"><code class="code">ty</code> : the input type</div>
+<div class="param_info"><code class="code">x</code> : the symbol to check</div>
+
+<pre><span id="VALcheck_type"><span class="keyword">val</span> check_type</span> : <code class="type"><a href="Ast.html#TYPEtyp">Ast.typ</a> -> <a href="Ast.html#TYPEtyp">Ast.typ</a> -> <a href="Ast.html#TYPEexpr">Ast.expr</a> -> 'a -> 'a</code></pre><div class="info ">
+<div class="info-desc">
+<p>Additional function that checkes whenever two types coincide.
+  If they are equal, it returns the element (ret) passes as an argument,
+  otherwise it raises an error.</p>
+</div>
+</div>
+<div class="param_info"><code class="code">ret</code> : the element to return</div>
+
+<pre><span id="VALinitialize"><span class="keyword">val</span> initialize</span> : <code class="type"><a href="Ast.html#TYPEtyp">Ast.typ</a> <a href="Symbol_table.html#TYPEt">Symbol_table.t</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Additional function that inserts the library functions into the symbol table</p>
+</div>
+<ul class="info-attributes">
+<li><b>Returns</b> the initial symbol table</li>
+</ul>
+</div>
+
+<pre><span id="VALcustom_fold"><span class="keyword">val</span> custom_fold</span> : <code class="type">('a -> 'b -> 'a * 'c) -> 'a -> 'b list -> 'a * 'c list</code></pre><div class="info ">
+<div class="info-desc">
+<p>Additional function that implements a fold left map</p>
+</div>
+</div>
+<div class="param_info"><code class="code">f</code> : the function to be applied</div>
+<div class="param_info"><code class="code">acc</code> : the accolumator for the result of the function</div>
+<div class="param_info"><code class="code">y</code> : the list of elements which the function should be applied</div>
+
+<pre><span id="VALmake_access"><span class="keyword">val</span> make_access</span> : <code class="type"><a href="Ast.html#TYPEaccess">Ast.access</a> -> <a href="Ast.html#TYPEaccess_node">Ast.access_node</a> <a href="Ast.html#TYPEannotated_node">Ast.annotated_node</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Additional function that creates a node access</p>
+</div>
+</div>
+
+<pre><span id="VALtype_expr"><span class="keyword">val</span> type_expr</span> : <code class="type"><a href="Semant.html#TYPEcontext">context</a> -> <a href="Ast.html#TYPEexpr">Ast.expr</a> -> <a href="Ast.html#TYPEtyp">Ast.typ</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Additional function that returns the type of the expression passed as parameter</p>
+</div>
+<ul class="info-attributes">
+<li><b>Returns</b> (typ)</li>
+</ul>
+</div>
+
+<pre><span id="VALcheck_expr"><span class="keyword">val</span> check_expr</span> : <code class="type"><a href="Semant.html#TYPEcontext">context</a> -> <a href="Ast.html#TYPEexpr">Ast.expr</a> -> <a href="Ast.html#TYPEexpr">Ast.expr</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>This function is used in order to check the semantic of an expression</p>
+</div>
+<ul class="info-attributes">
+<li><b>Returns</b> (e) the expression checked</li>
+</ul>
+</div>
+
+<pre><span id="VALcheck_stmt"><span class="keyword">val</span> check_stmt</span> : <code class="type"><a href="Semant.html#TYPEcontext">context</a> -> <a href="Ast.html#TYPEstmt">Ast.stmt</a> -> <a href="Ast.html#TYPEfun_decl">Ast.fun_decl</a> -> <a href="Ast.html#TYPEstmt">Ast.stmt</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>This function is used in order to check the semantic of a statement</p>
+</div>
+<ul class="info-attributes">
+<li><b>Returns</b> the statement checked</li>
+</ul>
+</div>
+<div class="param_info"><code class="code">fdec</code> : the function declaration</div>
+
+<pre><span id="VALcheck_topdecl"><span class="keyword">val</span> check_topdecl</span> : <code class="type"><a href="Semant.html#TYPEcontext">context</a> -><br>       <a href="Ast.html#TYPEtopdecl">Ast.topdecl</a> -> <a href="Ast.html#TYPEtyp">Ast.typ</a> <a href="Symbol_table.html#TYPEt">Symbol_table.t</a> * <a href="Ast.html#TYPEtopdecl_node">Ast.topdecl_node</a> <a href="Ast.html#TYPEannotated_node">Ast.annotated_node</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>This function is used in order to check the semantic of a top declaration,
+  which can be either a function or variable declaration</p>
+</div>
+<ul class="info-attributes">
+<li><b>Returns</b> (env, td), the changed environment and the declaration</li>
+</ul>
+</div>
+
+<pre><span id="VALcheck_main"><span class="keyword">val</span> check_main</span> : <code class="type"><a href="Semant.html#TYPEcontext">context</a> -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p>This function is used in order to check the semantic of the main function</p>
+</div>
+</div>
+
+<pre><span id="VALcheck"><span class="keyword">val</span> check</span> : <code class="type"><a href="Ast.html#TYPEprogram">Ast.program</a> -> <a href="Ast.html#TYPEprogram">Ast.program</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Starting point for the program's type checking</p>
+</div>
+</div>
+</body></html>
