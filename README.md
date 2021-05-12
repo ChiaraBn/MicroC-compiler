@@ -64,6 +64,6 @@ Inside the **src** folder: <br>
 | opt_pass.ml  | Module that implements some simple optimizations |             
 | symbol_table.mli | Interface of a polymorphic symbol table data type |          
 | symbol_table.ml | Implementation of a polymorphic symbol table data type |
-| util.ml | contains some utily functions                         |               
+| util.ml | It contains some utily functions                         |               
 | error_msg.ml | The strings representing the semantic errors     |           
 | rt-support.c | The run-time support to be linked to bitcode files|
